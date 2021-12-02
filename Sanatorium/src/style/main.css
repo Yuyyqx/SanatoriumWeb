@@ -1,0 +1,58 @@
+.clearfix {
+    *zoom:1;
+}
+.el-calendar {
+  margin: 15px;
+  width: 55%;
+}
+.el-calendar-table .el-calendar-day {
+    font-size: 8px;
+    box-sizing: border-box;
+    padding: 8px;
+    height: 50px;
+}
+.el-upload-list--picture-card .el-upload-list__item {
+  width: 80px;
+  height: 80px;
+}
+.el-upload--picture-card {
+  width: 80px;
+  height: 80px;
+}
+.el-upload--picture-card i {
+  line-height: 3;
+  vertical-align: middle;
+}
+.el-scrollbar__wrap{
+  overflow-x: hidden;
+}
+.el-scrollbar__bar.is-horizontal>div {
+  height: 0;
+}
+.el-step__title.is-wait {
+  color: #FFFFFF;
+}
+.el-step__head.is-wait {
+  color: #747474;
+  border-color: white;
+}
+.el-step__title.is-success {
+  color: rgb(164 255 0);
+}
+.el-step__title.is-process {
+  font-weight: 600;
+  color: white;
+}
+.el-step__head.is-process {
+  color: #747474;
+  border-color: white;
+}
+.el-table .el-table__cell {
+  text-align: center;
+}
+table--group::after, .el-table::before {
+  background-color: #FFFFFF;
+}
+.el-select-dropdown__list {
+  padding-bottom: 20px;
+}
