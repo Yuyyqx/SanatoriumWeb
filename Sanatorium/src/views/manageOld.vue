@@ -21,7 +21,7 @@
       <div class="top">
         <!-- <img id="logo" src="../../static/images/logo.png"/> -->
         <img src="../../static/images/catalogue.png" />
-        <div class="topRight">
+        <div :class="nowUserName!=''?'userNameleft': 'topRight'">
           <img
             style="width: 26px; height: 26px; margin-top: 5px"
             src="../../static/images/a12.jpg"
@@ -32,7 +32,7 @@
               font-size: 10px;
               padding: 11px 5px 5px 5px;
             "
-            >用户名</label
+            >{{nowUserName}}</label
           >
           <img src="../../static/images/letter.png" />
           <img
@@ -143,8 +143,8 @@
             size="mini"
             >登记入住</el-button
           > -->
-          <el-table class="maintable" :data="tableData">
-            <el-table-column type="index" label="编号" width="60">
+          <el-table class="maintable" :data="tableData.slice((currentPage - 1) * pageSize, currentPage*pageSize)">
+            <el-table-column type="index" label="编号" width="60" :index="table_index">
             </el-table-column>
             <el-table-column prop="name" label="姓名" width="120">
             </el-table-column>
@@ -205,8 +205,12 @@
           <el-pagination
             class="mainpagination"
             background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="pageSize"
             layout="prev, pager, next"
-            :total="1000"
+            :total="total"
           >
           </el-pagination>
         </div>
@@ -574,41 +578,38 @@ export default {
           room: "9-110",
           communicate: "罗美珍",
         },
+        {
+          sex: "男",
+          date: "1979-11-31",
+          name: "王建国",
+          type: "大体健康",
+          room: "9-110",
+          communicate: "罗美珍",
+        },
       ],
       type: "",
+      total: 4,//分页共有多少条数据
+      currentPage: 1, //当前页数
+      pageSize: 3, //一页3条数据
+      search: '',
+      select: '',
+      nowUserName: '' //当前登录用户
     };
   },
   methods: {
-    //登录
-    onSubmit() {
-      console.log("username:" + this.form.username);
-      console.log("password:" + this.form.password);
-      //获取用户登录接口
-      this.$ajax
-        .get(
-          "http://localhost:63342/test/controller/check_user.php?username=" +
-            this.form.username +
-            "&password=" +
-            this.form.password
-        )
-        .then((response) => {
-          console.log(JSON.stringify(response.data));
-          if (response.data.resultCode == 200) {
-            this.$router.push({
-              path: "/index",
-              query: {
-                username: this.form.username,
-                password: this.form.password,
-              },
-            });
-            sessionStorage.setItem("userName", this.form.username);
-            sessionStorage.setItem("userID", response.data.data[0].userid);
-          }
-        })
-        .catch((res) => {
-          console.log(res);
-        });
-    },
+    //当前分页有多少条数据
+    handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      //当前界面是分页的第几页
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+        this.currentPage = val;
+      },
+      //跨页编号连续
+      table_index(index){
+        return (this.currentPage-1) * this.pageSize + index + 1
+      },
     //登记入住
     checkIn() {
       this.$router.push({ path: "/checkIn" });
@@ -620,13 +621,16 @@ export default {
     handleDelete(index, row) {
       console.log(index, row);
     },
+    searchByKey() {}
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.nowUserName = sessionStorage.getItem("userName");
+  },
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #manageOld {
   display: flex;
   // justify-content: center;
@@ -690,6 +694,17 @@ export default {
     .topRight {
       display: flex;
       margin-left: 1020px;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+    .userNameleft {
+      margin-left: 940px;
+      display: flex;
       img {
         width: 20px;
         height: 20px;

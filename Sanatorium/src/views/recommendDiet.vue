@@ -569,7 +569,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #recommendDiet {
   display: flex;
   // justify-content: center;

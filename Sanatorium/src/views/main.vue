@@ -1,5 +1,5 @@
 <template>
-  <div id="main">
+  <div id="mains">
     <div class="left">
       <div class="exa">
         <img id="logo" src="../../static/images/logo_9.png" />
@@ -21,7 +21,7 @@
       <div class="top">
         <!-- <img id="logo" src="../../static/images/logo.png"/> -->
         <img src="../../static/images/catalogue.png" />
-        <div class="topRight">
+        <div :class="nowUserName!=''?'userNameleft': 'topRight'">
           <img
             style="width: 26px; height: 26px; margin-top: 5px"
             src="../../static/images/a12.jpg"
@@ -32,7 +32,7 @@
               font-size: 10px;
               padding: 11px 5px 5px 5px;
             "
-            >用户名</label
+            >{{nowUserName}}</label
           >
           <img src="../../static/images/letter.png" />
           <img
@@ -140,7 +140,7 @@ require("echarts/lib/chart/pie");
 require("echarts/lib/component/tooltip");
 require("echarts/lib/component/title");
 export default {
-  name: "main",
+  name: "mains",
   components: {
     NavMenu: NavMenu,
   },
@@ -525,6 +525,7 @@ export default {
       opinionData1: [],
       opinionData2: [],
       date: new Date(),
+      nowUserName: '' //当前登录用户
     };
   },
   methods: {
@@ -695,6 +696,8 @@ export default {
     this.timer = setInterval(() => {
       _this.date = new Date(); // 修改数据date
     }, 1000);
+
+    this.nowUserName = sessionStorage.getItem("userName");
   },
   beforeDestroy() {
     if (this.timer) {
@@ -704,8 +707,8 @@ export default {
 };
 </script>
 
-<style lang="less">
-#main {
+<style lang="less" scoped>
+#mains {
   display: flex;
   // justify-content: center;
   // align-content: center;
@@ -768,6 +771,17 @@ export default {
     .topRight {
       display: flex;
       margin-left: 1020px;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+    .userNameleft {
+      margin-left: 940px;
+      display: flex;
       img {
         width: 20px;
         height: 20px;
@@ -904,4 +918,5 @@ export default {
     }
   }
 }
+
 </style>

@@ -722,7 +722,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #nurseLeaveApprove {
   display: flex;
   // justify-content: center;

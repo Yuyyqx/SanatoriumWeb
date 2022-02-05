@@ -21,7 +21,7 @@
 }
 .el-upload--picture-card i {
   line-height: 3;
-  vertical-align: middle;
+  vertical-align: top;
 }
 .el-scrollbar__wrap{
   overflow-x: hidden;

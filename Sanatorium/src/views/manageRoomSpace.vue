@@ -21,7 +21,7 @@
       <div class="top">
         <!-- <img id="logo" src="../../static/images/logo.png"/> -->
         <img src="../../static/images/catalogue.png" />
-        <div class="topRight">
+        <div :class="nowUserName!=''?'userNameleft': 'topRight'" >
           <img
             style="width: 26px; height: 26px; margin-top: 5px"
             src="../../static/images/a12.jpg"
@@ -32,7 +32,7 @@
               font-size: 10px;
               padding: 11px 5px 5px 5px;
             "
-            >用户名</label
+            >{{nowUserName}}</label
           >
           <img src="../../static/images/letter.png" />
           <img
@@ -89,88 +89,23 @@
           </div>
           <!--图表-->
           <div class="managePic">
-            <!-- <div class="managePic1">
-              <label>空余情况</label>
-              <el-select
-                class="selectPic"
-                v-model="value"
-                filterable
-                placeholder=""
-                @change="selectChange"
-              >
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
+            <div class="managePic1" v-for="(item,index) in options">
+              <label>{{item.roomTypeName}}空余情况</label>
               <radial-indicator
-                :percentNum="percentNum"
+                percentNum="33"
                 speed="3"
                 size="220"
                 color="#8abf50"
+                @animationFinished="animationFinished"
                 backgroundColor="#c4dfa7"
-                :content="value"
+                :content='item.roomTypeName'
+                icon="mail"
                 class="manageRadial"
+                style="margin-top: 40px"
               />
-              <!-- <div>
-                       <button class="manageClick">单人间</button>
-                       <button class="manageClick">三人间</button>
-                       <button class="manageClick">五人间</button>
-                   </div> -->
-            <!-- </div> -->
-            <!-- <div class="managePic2">
-              <label
-                ><label class="label1">房间查询 / </label
-                ><label style="color: #63cda5; margin-left: -20px">{{
-                  value
-                }}</label></label
-              >
-              <el-button
-                style="
-                  width: 10%;
-                  background: #63cda5;
-                  border: 1px solid #63cda5;
-                  margin-left: 690px;
-                "
-                type="primary"
-                size="mini"
-                >新增房间</el-button
-              >
-              <el-table class="maintable" :data="tableData">
-                <el-table-column prop="roomNum" label="房间号码" width="180">
-                </el-table-column>
-                <el-table-column prop="used" label="已用床位" width="180">
-                </el-table-column>
-                <el-table-column prop="grade" label="护助等级">
-                </el-table-column>
-                <el-table-column label="操作">
-                  <template slot-scope="scope">
-                    <el-button
-                      size="mini"
-                      @click="handleEdit(scope.$index, scope.row)"
-                      >编辑</el-button
-                    >
-                    <el-button
-                      size="mini"
-                      type="danger"
-                      @click="handleDelete(scope.$index, scope.row)"
-                      >删除</el-button
-                    >
-                  </template>
-                </el-table-column>
-              </el-table>
-              <el-pagination
-                class="mainpagination"
-                background
-                layout="prev, pager, next"
-                :total="1000"
-              >
-              </el-pagination>
-            </div> -->
-            <div class="managePic1">
+              <button class="manageClick" @click="manageClick(index)">查看详情</button>
+            </div>
+            <!-- <div class="managePic1">
               <label>单人间空余情况</label>
               <radial-indicator
                 percentNum="50"
@@ -185,8 +120,8 @@
                 style="margin-top: 40px"
               />
               <button class="manageClick" @click="manageClick">查看详情</button>
-            </div>
-            <div class="managePic1">
+            </div> -->
+            <!-- <div class="managePic1">
               <label>三人间空余情况</label>
               <radial-indicator
                 percentNum="50"
@@ -217,11 +152,11 @@
                 icon="mail"
                 class="manageRadial"
                 style="margin-top: 40px"
-              />
-              <button class="manageClick" @click="manageClick2">
+              /> -->
+              <!-- <button class="manageClick" @click="manageClick2">
                 查看详情
-              </button>
-            </div>
+              </button> -->
+            <!-- </div> -->
           </div>
         </div>
       </div>
@@ -234,11 +169,20 @@
       :before-close="handleClose"
     >
       <span>
-        <div style="display: flex">
-          <label style="width: 110px">房间位数：</label>
+        <div style="display: flex;margin-bottom:20px;">
+          <label style="width: 110px">房间类型：</label>
           <el-input
             placeholder="请输入"
-            v-model="roomNum"
+            v-model="roomTypeName"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+        <div style="display: flex">
+          <label style="width: 110px">床位数量：</label>
+          <el-input
+            placeholder="请输入"
+            v-model="bedCount"
             style="margin-left: 0px; width: 60%"
           >
           </el-input>
@@ -247,7 +191,7 @@
           <label style="width: 110px">单人价位：</label>
           <el-input
             placeholder="  /天"
-            v-model="price"
+            v-model="singleMonthlyPrice"
             style="margin-left: 0px; width: 60%"
           >
           </el-input>
@@ -255,7 +199,7 @@
       </span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
+        <el-button type="primary" @click="setNewRoomType"
           >设 置</el-button
         >
       </span>
@@ -271,6 +215,7 @@ export default {
     RadialIndicator: RadialIndicator,
     NavMenu: NavMenu,
   },
+  inject: ['reload'],//注入reload方法
   data() {
     return {
       form: {
@@ -648,6 +593,12 @@ export default {
       roomNum: "",
       price: "",
       roomType: "",
+      nowUserName: '', //当前登录用户
+      sanInfoId: '',
+      sanId: '',
+      bedCount: '',
+      roomTypeName: '',
+      singleMonthlyPrice: ''
     };
   },
   methods: {
@@ -662,33 +613,38 @@ export default {
       this.value = this.options[value].label;
       this.percentNum = this.options[value].num;
     },
-    manageClick() {
+    manageClick(index) {
+      console.log(this.options[index].roomTypeName);
       this.$router.push({
         path: "/manageRoomSpaceDetail",
         query: {
-          roomType: "单人间",
-        },
-      });
-    },
-    manageClick1() {
-      this.$router.push({
-        path: "/manageRoomSpaceDetail",
-        query: {
-          roomType: "三人间",
-        },
-      });
-    },
-    manageClick2() {
-      this.$router.push({
-        path: "/manageRoomSpaceDetail",
-        query: {
-          roomType: "五人间",
+          roomType: this.options[index].roomTypeName,
+          roomTypeId: this.options[index].roomTypeId,
         },
       });
     },
     //设置房间
     addRoom() {
       this.dialogVisible = true;
+    },
+    //设置新的房间类型
+    setNewRoomType() {
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/room/insertRoomType?bedCount="+
+            this.bedCount+"&roomTypeName="+ this.roomTypeName+"&sanId="+this.sanId+
+            "&sanInfoId="+this.sanInfoId+"&singleMonthlyPrice=" +
+            this.singleMonthlyPrice
+        )
+        .then((response) => {
+          console.log(response.data);
+          alert("添加成功！")
+          this.reload();
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+      this.dialogVisible = false;
     },
     handleClose(done) {
       this.$confirm("确认关闭？")
@@ -697,13 +653,36 @@ export default {
         })
         .catch((_) => {});
     },
+    animationFinished() {},
+
+    //获取当前房间类型列表
+    getRoomTypeList() {
+      this.$ajax
+        .get(
+          "https://www.tangyihan.top/web/room/getRoomTypeList?sanInfoId=" +
+            this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.options = response.data.data
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    }
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.nowUserName = sessionStorage.getItem("userName");
+    this.sanInfoId = sessionStorage.getItem("sanInfoId");
+    this.sanId = sessionStorage.getItem("sanId");
+
+    this.getRoomTypeList();
+  },
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #manageRoomSpace {
   display: flex;
   // justify-content: center;
@@ -767,6 +746,17 @@ export default {
     .topRight {
       display: flex;
       margin-left: 1020px;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+    .userNameleft {
+      margin-left: 940px;
+      display: flex;
       img {
         width: 20px;
         height: 20px;

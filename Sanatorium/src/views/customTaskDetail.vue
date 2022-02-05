@@ -963,7 +963,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #customTaskDetail {
   display: flex;
   // justify-content: center;

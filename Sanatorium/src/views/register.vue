@@ -21,7 +21,7 @@
           <el-input
             class="username"
             v-model="form.date"
-            placeholder="请输入"
+            placeholder="如：2022-01-01"
           ></el-input
         ></label>
         <label class="labels" @click="showMap"
@@ -33,7 +33,7 @@
             suffix-icon="el-icon-location-outline"
           ></el-input
         ></label>
-        <label class="labels"
+        <label class="labels" @click="showMap"
           >总负责人:&nbsp;&nbsp;
           <el-input
             class="username"
@@ -74,42 +74,16 @@
         <div class="content1">
           <div class="imgBox">
             <el-upload
-  action="https://jsonplaceholder.typicode.com/posts/"
-  list-type="picture-card"
-  :on-preview="handlePictureCardPreview"
-  :on-remove="handleRemove">
-  <i class="el-icon-plus"></i>
-</el-upload>
-<el-dialog :visible.sync="dialogVisible">
-  <img width="100%" :src="dialogImageUrl" alt="">
-</el-dialog>
-            <!-- <div
-              class="uploadBox"
-              v-for="(value, key) in imgs"
-              :key="'uploadBox' + key"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              list-type="picture-card"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove"
             >
-              <img :src="getObjectURL(value)" alt="" class="uploadImg" />
-              <img
-                src="../../static/images/delete.png"
-                alt=""
-                class="closeImg"
-                @click="delImg(key)"
-              />
-            </div>
-            <div class="inputButton">
-              <img src="../../static/images/upload.png" alt="" class="addImg" />
-              <input
-                type="file"
-                class="upload"
-                @change="addImg"
-                ref="inputer"
-                multiple
-                accept="image/*"
-              />
-            </div> -->
-            <!-- <div class="submitTask" @click="submit">
-        上传图片
-      </div> -->
+              <i class="el-icon-plus"></i>
+            </el-upload>
+            <el-dialog :visible.sync="dialogVisible">
+              <img width="100%" :src="dialogImageUrl" alt="" />
+            </el-dialog>
           </div>
         </div>
       </div>
@@ -152,8 +126,8 @@ export default {
       txtVal: 0,
       desc: "",
       locationFlag: false,
-      dialogImageUrl: '',
-      dialogVisible: false
+      dialogImageUrl: "",
+      dialogVisible: false,
     };
   },
   methods: {
@@ -181,16 +155,19 @@ export default {
             this.form.person
         )
         .then((response) => {
-          console.log(JSON.stringify(response.data));
-          // if (response.data.resultCode==200) {
-          //   this.$router.push({path:'/index',
-          //   query: {
-          //       username: this.form.username,
-          //       password: this.form.password
-          //   }});
-          //   sessionStorage.setItem("userName",this.form.username)
-          //   sessionStorage.setItem("userID",response.data.data[0].userid)
-          // }
+          console.log(response.data);
+          if (response.data.code == 0) {
+            alert("注册成功！");
+            this.$router.push({
+              path: "/login",
+              query: {
+                username: this.form.username,
+                password: this.form.password,
+              },
+            });
+            sessionStorage.setItem("userName", this.form.username);
+            sessionStorage.setItem("userID", response.data.data[0].userid);
+          }
         })
         .catch((res) => {
           console.log(res);
@@ -250,7 +227,7 @@ export default {
       this.formData.getAll("file");
       console.log("this.formData", this.formData);
       this.$refund.upload(this.formData);
-      console.log(this.formData)
+      console.log(this.formData);
     },
     //是否显示地图
     showMap() {
@@ -263,19 +240,19 @@ export default {
     },
 
     handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-      }
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
   },
   created() {},
   mounted() {},
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #register {
   display: flex;
   flex-direction: column;

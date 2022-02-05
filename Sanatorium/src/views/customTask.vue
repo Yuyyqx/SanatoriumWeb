@@ -1171,7 +1171,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #customTask {
   display: flex;
   // justify-content: center;

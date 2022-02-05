@@ -21,7 +21,7 @@
       <div class="top">
         <!-- <img id="logo" src="../../static/images/logo.png"/> -->
         <img src="../../static/images/catalogue.png" />
-        <div class="topRight">
+        <div :class="nowUserName!=''?'userNameleft': 'topRight'" >
           <img
             style="width: 26px; height: 26px; margin-top: 5px"
             src="../../static/images/a12.jpg"
@@ -32,7 +32,7 @@
               font-size: 10px;
               padding: 11px 5px 5px 5px;
             "
-            >用户名</label
+            >{{nowUserName}}</label
           >
           <img src="../../static/images/letter.png" />
           <img
@@ -105,7 +105,7 @@
               <label
                 ><label class="label1">房间查询 / </label
                 ><label style="color: #63cda5; margin-left: -20px">{{
-                  value
+                  roomType
                 }}</label></label
               >
               <!-- <el-button
@@ -119,18 +119,22 @@
                 size="mini"
                 >新增房间</el-button
               > -->
-              <el-table class="maintable" :data="tableData">
-                <el-table-column type="index" label="编号" width="60">
+              <el-table class="maintable" :data="tableData" 
+              :header-cell-style="{background:'#eef1f6',color:'#606266',textAlign:'center'}">
+                <el-table-column type="index" label="编号" width="80">
                 </el-table-column>
-                <el-table-column prop="buildNum" label="楼号" width="180">
+                <el-table-column prop="building" label="楼号" width="180">
                 </el-table-column>
-                <el-table-column prop="roomNum" label="房间号码" width="180">
+                <el-table-column prop="roomNumber" label="房间号码" width="180">
                 </el-table-column>
-                <el-table-column prop="used" label="已用床位" width="180">
+                <el-table-column prop="usedBed" label="已用床位" width="160">
                 </el-table-column>
-                <el-table-column prop="equipment" label="硬件设备" width="180">
-                </el-table-column>
-                <el-table-column prop="grade" label="护助等级">
+                <!-- <el-table-column prop="beds" label="床位数量" width="145">
+                  <template slot-scope="scope">
+                {{scope.row.beds.length}}
+              </template>
+                </el-table-column> -->
+                <el-table-column prop="healthLevel" label="护助等级">
                 </el-table-column>
                 <el-table-column label="操作">
                   <template slot-scope="scope">
@@ -138,6 +142,12 @@
                       size="mini"
                       @click="handleEdit(scope.$index, scope.row)"
                       >编辑</el-button
+                    >
+                    <el-button
+                      size="mini"
+                      type="danger"
+                      @click="clearRoom(scope.$index, scope.row)"
+                      >清空</el-button
                     >
                     <el-button
                       size="mini"
@@ -151,8 +161,12 @@
               <el-pagination
                 class="mainpagination"
                 background
-                layout="prev, pager, next"
-                :total="1000"
+                @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            layout="prev, pager, next"
+            :total="total"
               >
               </el-pagination>
             </div>
@@ -181,6 +195,7 @@
         <div style="display: flex; margin-top: 20px">
           <label style="width: 110px">房间号码：</label>
           <el-cascader
+            ref="cascaderMallCatergory"
             v-model="roomNumber"
             :options="roomNumberOptions"
             :props="{ expandTrigger: 'hover' }"
@@ -189,7 +204,7 @@
         </div>
         <div style="display: flex; margin-top: 20px">
           <label style="width: 110px">护助等级：</label>
-          <el-select v-model="grade" placeholder="请选择">
+          <el-select v-model="grade" placeholder="请选择" @change="changeGradeValue">
             <el-option
               v-for="item in gradeOptions"
               :key="item.value"
@@ -202,7 +217,7 @@
       </span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
+        <el-button type="primary" @click="addNewRoom"
           >新 增</el-button
         >
       </span>
@@ -218,6 +233,7 @@ export default {
     RadialIndicator: RadialIndicator,
     NavMenu: NavMenu,
   },
+  inject: ['reload'],//注入reload方法
   data() {
     return {
       form: {
@@ -580,24 +596,7 @@ export default {
           equipment: "优",
         },
       ],
-      options: [
-        {
-          value: 0,
-          label: "单人间",
-          num: "33",
-        },
-        {
-          value: 1,
-          label: "三人间",
-          num: "50",
-        },
-        {
-          value: 2,
-          label: "五人间",
-          num: "87",
-        },
-      ],
-      value: "单人间",
+      value: "",
       percentNum: "33",
       dialogVisible: false,
       roomType: "",
@@ -609,46 +608,63 @@ export default {
           label: "A楼",
           children: [
             {
-              value: "2",
-              label: "1层",
+              value: "11",
+              label: "1",
               children: [
                 {
-                  value: "3",
-                  label: "101室",
+                  value: "111",
+                  label: "101",
                 },
                 {
-                  value: "4",
-                  label: "102室",
+                  value: "112",
+                  label: "102",
                 },
                 {
-                  value: "5",
-                  label: "103室",
+                  value: "113",
+                  label: "103",
                 },
               ],
             },
             {
-              value: "6",
-              label: "2层",
+              value: "12",
+              label: "2",
               children: [
                 {
-                  value: "7",
-                  label: "201室",
+                  value: "121",
+                  label: "201",
+                },{
+                  value: "122",
+                  label: "202",
+                },{
+                  value: "123",
+                  label: "203",
                 },
               ],
             },
           ],
         },
         {
-          value: "8",
+          value: "2",
           label: "B楼",
           children: [
             {
-              value: "9",
-              label: "9层",
+              value: "29",
+              label: "9",
               children: [
                 {
-                  value: "10",
-                  label: "901室",
+                  value: "291",
+                  label: "901",
+                },{
+                  value: "292",
+                  label: "902",
+                },
+                {
+                  value: "293",
+                  label: "903",
+                },
+                {
+                  value: "2916",
+                  label: "916",
                 },
               ],
             },
@@ -673,9 +689,35 @@ export default {
           label: "丧失自理",
         },
       ],
+      total: 0,//分页共有多少条数据
+      currentPage: 1, //当前页数
+      pageSize: 4, //一页4条数据
+      nowUserName: '', //当前登录用户
+      roomTypeId: '',//当前房间号
+      addBuilding: '',//添加楼号
+      addFloor: '',//添加层数
+      addRoomNumber: '',//添加房间号
+      sanId: '',
+      healthLevel: ''
     };
   },
   methods: {
+     //当前分页有多少条数据
+    handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      //当前界面是分页的第几页
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+        this.currentPage = val;
+        this.getRoomList();
+        console.log(this.currentPage)
+        // this.reload();
+      },
+      //跨页编号连续
+      table_index(index){
+        return (this.currentPage-1) * this.pageSize + index + 1
+      },
     //下拉框
     bindPickerChange(e) {
       this.index = e.target.value;
@@ -698,18 +740,100 @@ export default {
         })
         .catch((_) => {});
     },
+    //获取选择的楼号、层数以及房间号
     handleChange(value) {
       console.log(value);
+      if (this.roomNumber.length != 0) {       
+        let arr = this.$refs['cascaderMallCatergory'].getCheckedNodes()[0].pathLabels
+        console.log('arr', arr);
+        this.addBuilding = arr[0];
+        this.addFloor = arr[1];
+        this.addRoomNumber = arr[2];
+      }
     },
+    changeGradeValue() {
+      this.healthLevel=this.gradeOptions.find(val=>val.value==this.grade).label
+      console.log(this.healthLevel)
+    },
+
+    //获取当前房间类型的房间列表
+    getRoomList() {
+      this.$ajax
+        .get(
+          "https://www.tangyihan.top/web/room/getRoomList?current="+this.currentPage+"&roomTypeId="+this.roomTypeId+"&size=4"
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.tableData = response.data.data.records
+          this.total = response.data.data.total
+          // sessionStorage.setItem("currentPage", this.currentPage);
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+    //新增房间接口
+    addNewRoom() {
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/room/insertRoom?building="+this.addBuilding+"&floor="+this.addFloor+
+          "&healthLevel="+this.healthLevel+"&roomNumber="+this.addRoomNumber+"&roomTypeId="+this.roomTypeId+"&sanId="+this.sanId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.reload();
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+    //删除房间接口
+    handleDelete(index, row){
+      console.log(index, row);
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/room/deleteRoom?roomId="+row.roomId+"&roomTypeId="+this.roomTypeId+"&sanId="+this.sanId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.reload();
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+    //清空房间接口
+    clearRoom(index, row) {
+      console.log(index, row);
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/room/clearRoom?roomId="+row.roomId+"&roomTypeId="+this.roomTypeId+"&sanId="+this.sanId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.reload();
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    }
   },
   created() {
     this.roomType = this.$route.query.roomType;
+    this.roomTypeId = this.$route.query.roomTypeId;
   },
-  mounted() {},
+  mounted() {
+    this.nowUserName = sessionStorage.getItem("userName");
+    this.sanId = sessionStorage.getItem("sanId");
+
+    if (this.currentPage == 1) {
+      this.getRoomList();
+    }
+  },
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #manageRoomSpaceDetail {
   display: flex;
   // justify-content: center;
@@ -773,6 +897,17 @@ export default {
     .topRight {
       display: flex;
       margin-left: 1020px;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+    .userNameleft {
+      margin-left: 940px;
+      display: flex;
       img {
         width: 20px;
         height: 20px;

@@ -75,8 +75,8 @@ export default {
             this.form.password
         )
         .then((response) => {
-          console.log(JSON.stringify(response.data));
-          if (response.data.code == 200) {
+          console.log(response.data)
+          // if (response.data.code == 200) {
             this.$router.push({
               path: "/main",
               query: {
@@ -85,8 +85,10 @@ export default {
               },
             });
             sessionStorage.setItem("userName", this.form.username);
-            sessionStorage.setItem("userID", response.data.data[0].userid);
-          }
+            sessionStorage.setItem("sanInfoId", response.data.data.sanInfoId);
+            sessionStorage.setItem("sanId", response.data.data.sanId);
+            // sessionStorage.setItem("userID", response.data.data[0].userid);
+          // }
         })
         .catch((res) => {
           console.log(res);
@@ -102,7 +104,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #login {
   display: flex;
   flex-direction: column;
@@ -128,6 +130,7 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 120px auto;
+  margin-left: 550px;
   .left {
     width: 50%;
     // background: white;

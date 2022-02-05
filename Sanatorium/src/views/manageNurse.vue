@@ -724,7 +724,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #manageNurse {
   display: flex;
   // justify-content: center;

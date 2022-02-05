@@ -369,7 +369,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #highSensitiveOperation {
   display: flex;
   // justify-content: center;

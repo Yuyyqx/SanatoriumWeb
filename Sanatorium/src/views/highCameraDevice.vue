@@ -591,7 +591,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #highCameraDevice {
   display: flex;
   // justify-content: center;

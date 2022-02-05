@@ -516,7 +516,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #checkIn {
   display: flex;
   flex-direction: column;

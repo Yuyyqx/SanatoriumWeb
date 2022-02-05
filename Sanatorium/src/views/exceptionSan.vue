@@ -538,12 +538,14 @@ export default {
           describe: '老人生命体征微弱',
           way: '短信',
           isOpen: '启用'
-      },{
-          name:'老人生命体征微弱',
-          describe: '老人生命体征微弱',
-          way: '微信',
-          isOpen: '启用'
-      }],
+      },
+      // {
+      //     name:'老人生命体征微弱',
+      //     describe: '老人生命体征微弱',
+      //     way: '微信',
+      //     isOpen: '启用'
+      // }
+      ],
       type: "",
     };
   },
@@ -579,7 +581,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #exceptionSan {
   display: flex;
   // justify-content: center;

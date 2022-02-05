@@ -667,7 +667,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #highProfit {
   display: flex;
   // justify-content: center;

@@ -730,7 +730,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #wholeHealth {
   display: flex;
   // justify-content: center;

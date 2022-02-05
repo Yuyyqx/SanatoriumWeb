@@ -72,6 +72,76 @@ export default {
   },
  
   methods: {
+    // transformToDeg (percent) {
+    //   let deg = 0
+    //   if (percent >= 100) {
+    //     deg = 360
+    //   } else {
+    //     deg = parseInt(360 * percent / 100)
+    //   }
+    //   return deg
+    // },
+ 
+    // transformToPercent (deg) {
+    //   let percent = 0
+    //   if (deg >= 360) {
+    //     percent = 100
+    //   } else {
+    //     percent = parseInt(100 * deg / 360)
+    //   }
+    //   return percent
+    // },
+ 
+    // //  > 180
+    // rotateLeft (deg) {
+    //   this.$refs.leftcontent.style.transform = 'rotate(' + (deg - 180) + 'deg)'
+    // },
+ 
+    // //  < 180
+    // rotateRight (deg) {
+    //   this.$refs.rightcontent.style.transform = 'rotate(' + deg + 'deg)'
+    // },
+ 
+    // goRotate (deg) {
+    //   this.animationing = true
+    //   this.timeId = setInterval(() => {
+    //     if (deg > this.initDeg) {
+    //       this.initDeg += Number(this.speed)
+    //       if (this.initDeg >= 180) {
+    //         this.rotateLeft(this.initDeg)
+    //         this.rotateRight(180)
+    //       } else {
+    //         this.rotateRight(this.initDeg)
+    //       }
+    //     } else {
+    //       this.initDeg -= Number(this.speed)
+    //       if (this.initDeg >= 180) {
+    //         this.rotateLeft(this.initDeg)
+    //       } else {
+    //         this.rotateLeft(180)
+    //         this.rotateRight(this.initDeg)
+    //       }
+    //     }
+    //     this.percent = this.transformToPercent(this.initDeg)
+    //     const remainer = Number(deg) - this.initDeg
+    //     if (Math.abs(remainer) < this.speed) {
+    //       this.initDeg += remainer
+    //       if (this.initDeg > 180) {
+    //         this.rotateLeft(deg)
+    //       } else {
+    //         this.rotateRight(deg)
+    //       }
+    //       this.animationFinished()
+    //     }
+    //   }, 10)
+    // },
+ 
+    // animationFinished () {
+    //   this.percent = this.percentNum
+    //   this.animationing = false
+    //   clearInterval(this.timeId)
+    //   this.$emit('animationFinished')
+    // }
     transformToDeg (percent) {
       let deg = 0
       if (percent >= 100) {
@@ -81,7 +151,6 @@ export default {
       }
       return deg
     },
- 
     transformToPercent (deg) {
       let percent = 0
       if (deg >= 360) {
@@ -91,38 +160,33 @@ export default {
       }
       return percent
     },
- 
-    //  > 180
-    rotateLeft (deg) {
+    rotateLeft (deg) { // 大于180时，执行的动画
       this.$refs.leftcontent.style.transform = 'rotate(' + (deg - 180) + 'deg)'
     },
- 
-    //  < 180
-    rotateRight (deg) {
+    rotateRight (deg) { // 小于180时，执行的动画
       this.$refs.rightcontent.style.transform = 'rotate(' + deg + 'deg)'
     },
- 
     goRotate (deg) {
       this.animationing = true
       this.timeId = setInterval(() => {
-        if (deg > this.initDeg) {
+        if (deg > this.initDeg) { // 递增动画
           this.initDeg += Number(this.speed)
           if (this.initDeg >= 180) {
             this.rotateLeft(this.initDeg)
-            this.rotateRight(180)
+            this.rotateRight(180) // 为避免前后两次传入的百分比转换为度数后的值不为步距的整数，可能出现的左右转动不到位的情况。
           } else {
             this.rotateRight(this.initDeg)
           }
-        } else {
+        } else { // 递减动画
           this.initDeg -= Number(this.speed)
           if (this.initDeg >= 180) {
             this.rotateLeft(this.initDeg)
           } else {
-            this.rotateLeft(180)
+            this.rotateLeft(180) // 为避免前后两次传入的百分比转换为度数后的值不为步距的整数，可能出现的左右转动不到位的情况。
             this.rotateRight(this.initDeg)
           }
         }
-        this.percent = this.transformToPercent(this.initDeg)
+        this.percent = this.transformToPercent(this.initDeg) // 百分比数据滚动动画
         const remainer = Number(deg) - this.initDeg
         if (Math.abs(remainer) < this.speed) {
           this.initDeg += remainer
@@ -135,14 +199,22 @@ export default {
         }
       }, 10)
     },
- 
     animationFinished () {
-      this.percent = this.percentNum
+      this.percent = this.percentNum // 百分比数据滚动动画
       this.animationing = false
       clearInterval(this.timeId)
-      this.$emit('animationFinished')
+      this.$emit('animationFinished') // 动画完成的回调
     }
-  }
+  },
+  created () {
+    this.goRotate(this.transformToDeg(this.percentNum))
+  },
+  watch: {
+    'percentNum': function (val) {
+      if (this.animationing) return
+      this.goRotate(this.transformToDeg(val))
+    }
+  }  
 }
 </script>
  

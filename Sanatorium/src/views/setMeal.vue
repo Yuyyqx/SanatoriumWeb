@@ -710,7 +710,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #setMeal {
   display: flex;
   // justify-content: center;

@@ -682,7 +682,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #familyRegisterApprove {
   display: flex;
   // justify-content: center;

@@ -727,7 +727,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #familyActivityApprove {
   display: flex;
   // justify-content: center;

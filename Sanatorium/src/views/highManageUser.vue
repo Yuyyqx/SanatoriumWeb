@@ -525,7 +525,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #highManageUser {
   display: flex;
   // justify-content: center;
