@@ -21,7 +21,7 @@
       <div class="top">
         <!-- <img id="logo" src="../../static/images/logo.png"/> -->
         <img src="../../static/images/catalogue.png" />
-        <div class="topRight">
+        <div :class="nowUserName!=''?'userNameleft': 'topRight'" >
           <img
             style="width: 26px; height: 26px; margin-top: 5px"
             src="../../static/images/a12.jpg"
@@ -32,7 +32,7 @@
               font-size: 10px;
               padding: 11px 5px 5px 5px;
             "
-            >用户名</label
+            >{{nowUserName}}</label
           >
           <img src="../../static/images/letter.png" />
           <img
@@ -109,19 +109,24 @@
             class="maintable"
             :data="tableData"
             style="width: 95%; margin: 20px auto"
+            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           >
             <el-table-column type="index" label="编号" width="80">
             </el-table-column>
-            <el-table-column prop="email" label="账号邮箱" width="180">
+            <el-table-column prop="sanEmail" label="账号邮箱" width="180">
             </el-table-column>
-            <el-table-column prop="phone" label="手机号" width="180">
+            <!-- <el-table-column prop="phone" label="手机号" width="180">
             </el-table-column>
             <el-table-column prop="way" label="导入方式" width="140">
+            </el-table-column> -->
+            <el-table-column prop="createTime" label="创建时间" width="120">
+              <template slot-scope="scope">{{scope.row.createTime | dateYMDHMSFormat}}</template>
             </el-table-column>
-            <el-table-column prop="date" label="创建时间" width="120">
+            <el-table-column prop="isTopManager" label="是否为最高管理员" width="160">
+              <template slot-scope="scope">{{scope.row.isTopManager | isTopM}}</template>
             </el-table-column>
-            <el-table-column prop="area" label="管理区域" width="120">
-            </el-table-column>
+            <!-- <el-table-column prop="area" label="管理区域" width="120">
+            </el-table-column> -->
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
@@ -146,8 +151,12 @@
           <el-pagination
             class="mainpagination"
             background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="pageSize"
             layout="prev, pager, next"
-            :total="1000"
+            :total="total"
           >
           </el-pagination>
         </div>
@@ -192,7 +201,7 @@
       </span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
+        <el-button type="primary" @click="addNewAccount"
           >新 增</el-button
         >
       </span>
@@ -206,6 +215,7 @@ export default {
   components: {
     NavMenu: NavMenu,
   },
+  inject: ['reload'],//注入reload方法
   data() {
     return {
       form: {
@@ -535,96 +545,90 @@ export default {
         },
       ],
       tableData: [
-        {
-          email: "2211315784@qq.com",
-          date: "2021-11-02",
-          way: "认证疗养院",
-          area: "A",
-          phone: "19858104363",
-        },
-        {
-          email: "2211315785@qq.com",
-          date: "2021-11-02",
-          way: "认证疗养院",
-          area: "A",
-          phone: "17858104221",
-        },
-        {
-          email: "2211315786@qq.com",
-          date: "2021-11-02",
-          way: "认证疗养院",
-          area: "A",
-          phone: "17858005278",
-        },
-        {
-          email: "2211315791@qq.com",
-          date: "2021-11-02",
-          way: "认证疗养院",
-          area: "A",
-          phone: "19858124067",
-        },
-        {
-          email: "2211315792@qq.com",
-          date: "2021-11-02",
-          way: "认证疗养院",
-          area: "A",
-          phone: "19858105120",
-        },
-        {
-          email: "2211315795@qq.com",
-          date: "2021-11-02",
-          way: "新增账号",
-          area: "A",
-          phone: "19858108198",
-        },
+        // {
+        //   email: "2211315784@qq.com",
+        //   date: "2021-11-02",
+        //   way: "认证疗养院",
+        //   area: "A",
+        //   phone: "19858104363",
+        // },
+        // {
+        //   email: "2211315785@qq.com",
+        //   date: "2021-11-02",
+        //   way: "认证疗养院",
+        //   area: "A",
+        //   phone: "17858104221",
+        // },
+        // {
+        //   email: "2211315786@qq.com",
+        //   date: "2021-11-02",
+        //   way: "认证疗养院",
+        //   area: "A",
+        //   phone: "17858005278",
+        // },
+        // {
+        //   email: "2211315791@qq.com",
+        //   date: "2021-11-02",
+        //   way: "认证疗养院",
+        //   area: "A",
+        //   phone: "19858124067",
+        // },
+        // {
+        //   email: "2211315792@qq.com",
+        //   date: "2021-11-02",
+        //   way: "认证疗养院",
+        //   area: "A",
+        //   phone: "19858105120",
+        // },
+        // {
+        //   email: "2211315795@qq.com",
+        //   date: "2021-11-02",
+        //   way: "新增账号",
+        //   area: "A",
+        //   phone: "19858108198",
+        // },
       ],
       type: "",
       dialogVisible: false,
       email: "",
       password: "123456",
       isOpen: true,
+      total: 0,//分页共有多少条数据
+      currentPage: 1, //当前页数
+      pageSize: 6, //一页4条数据
+      nowUserName: '', //当前登录用户
+      sanId: '',
+      sanInfoId: '',
+      select: '',
+      search: ''
     };
   },
+  filters: {
+    isTopM: function (value) {
+      if (value == 1) return '是'
+      else
+      return '否'
+    }
+  },
   methods: {
-    //登录
-    onSubmit() {
-      console.log("username:" + this.form.username);
-      console.log("password:" + this.form.password);
-      //获取用户登录接口
-      this.$ajax
-        .get(
-          "http://localhost:63342/test/controller/check_user.php?username=" +
-            this.form.username +
-            "&password=" +
-            this.form.password
-        )
-        .then((response) => {
-          console.log(JSON.stringify(response.data));
-          if (response.data.resultCode == 200) {
-            this.$router.push({
-              path: "/index",
-              query: {
-                username: this.form.username,
-                password: this.form.password,
-              },
-            });
-            sessionStorage.setItem("userName", this.form.username);
-            sessionStorage.setItem("userID", response.data.data[0].userid);
-          }
-        })
-        .catch((res) => {
-          console.log(res);
-        });
-    },
-    //登记入住
-    checkIn() {
-      this.$router.push({ path: "/checkIn" });
-    },
+    //当前分页有多少条数据
+    handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      //当前界面是分页的第几页
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+        this.currentPage = val;
+        this.getAccountList();
+        console.log(this.currentPage)
+        // this.reload();
+      },
+      //跨页编号连续
+      table_index(index){
+        return (this.currentPage-1) * this.pageSize + index + 1
+      },
 
     handleEdit(index, row) {
-      console.log(index, row);
-    },
-    handleDelete(index, row) {
       console.log(index, row);
     },
     handleClose(done) {
@@ -638,9 +642,63 @@ export default {
     addAccount() {
       this.dialogVisible = true;
     },
+    searchByKey() {},
+
+    //获取当前疗养院管理账号列表
+    getAccountList() {
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/sanatoriumUser/getAccountPage?current="+this.currentPage+"&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId+"&size=6"
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.tableData = response.data.data.records
+          this.total = response.data.data.total
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+    //新增管理账号接口
+    addNewAccount() {
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/sanatoriumUser/insertAccount?email="+this.email+"&sanId="+this.sanId+
+          "&sanInfoId="+this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.reload();
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+    //删除管理账号接口
+    handleDelete(index, row) {
+      console.log(index, row);
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/sanatoriumUser/delAccount?delSanId="+row.sanId+"&sanId="+this.sanId+
+          "&sanInfoId="+this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.reload();
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.nowUserName = sessionStorage.getItem("userName");
+    this.sanInfoId = sessionStorage.getItem("sanInfoId");
+    this.sanId = sessionStorage.getItem("sanId");
+
+    this.getAccountList();
+  },
 };
 </script>
 
@@ -708,6 +766,17 @@ export default {
     .topRight {
       display: flex;
       margin-left: 1020px;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+    .userNameleft {
+      margin-left: 940px;
+      display: flex;
       img {
         width: 20px;
         height: 20px;

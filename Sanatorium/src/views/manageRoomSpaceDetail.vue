@@ -120,7 +120,7 @@
                 >新增房间</el-button
               > -->
               <el-table class="maintable" :data="tableData" 
-              :header-cell-style="{background:'#eef1f6',color:'#606266',textAlign:'center'}">
+              :header-cell-style="{background:'#eef1f6',color:'#606266'}">
                 <el-table-column type="index" label="编号" width="80">
                 </el-table-column>
                 <el-table-column prop="building" label="楼号" width="180">

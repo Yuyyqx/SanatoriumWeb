@@ -14,6 +14,11 @@ Vue.prototype.$ajax = axios
 
 Vue.config.productionTip = false
 
+import moment from 'moment'
+ 
+Vue.use(require('vue-moment'));
+Vue.prototype.moment = moment
+
 import VueAMap from 'vue-amap'
 Vue.use(VueAMap)
 VueAMap.initAMapApiLoader({
@@ -21,6 +26,10 @@ VueAMap.initAMapApiLoader({
   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor','AMap.Geolocation'],
   // 默认高德 sdk 版本为 1.4.4
   v: '1.4.4'
+})
+
+Vue.filter('dateYMDHMSFormat',function(dateStr,pattern='YYYY-MM-DD'){
+  return moment(dateStr).format(pattern);
 })
 
 

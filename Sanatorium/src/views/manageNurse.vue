@@ -21,7 +21,7 @@
       <div class="top">
         <!-- <img id="logo" src="../../static/images/logo.png"/> -->
         <img src="../../static/images/catalogue.png" />
-        <div class="topRight">
+        <div :class="nowUserName!=''?'userNameleft': 'topRight'" >
           <img
             style="width: 26px; height: 26px; margin-top: 5px"
             src="../../static/images/a12.jpg"
@@ -32,7 +32,7 @@
               font-size: 10px;
               padding: 11px 5px 5px 5px;
             "
-            >用户名</label
+            >{{nowUserName}}</label
           >
           <img src="../../static/images/letter.png" />
           <img
@@ -72,9 +72,17 @@
                 <el-button slot="append" @click="searchByKey">搜索</el-button>
               </el-input>
             </div>
-            <el-button
+            <el-upload
+              ref="upload"
+              :action="uploadExcel"
+              :show-file-list="false"
+              multiple
+              :http-request="uploadImage"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove"
+            >
+              <el-button
               style="
-                width: 7%;
                 background: #63cda5;
                 border: 1px solid #63cda5;
                 margin-left: 120px;
@@ -83,6 +91,20 @@
               type="primary"
               size="mini"
               >Excel导入</el-button
+            >
+            </el-upload>
+            <el-button
+              @click="addOneNurse"
+              style="
+                width: 7%;
+                background: #63cda5;
+                border: 1px solid #63cda5;
+                margin-left: 30px;
+                height: 35px;
+              "
+              type="primary"
+              size="mini"
+              >新增护工</el-button
             >
             <el-button
               @click="checkIn"
@@ -102,18 +124,22 @@
 
         <!--管理护工-->
         <div class="maincontent">
-          <el-table class="maintable" :data="tableData">
+          <el-table class="maintable" :data="tableData"
+          :header-cell-style="{background:'#eef1f6',color:'#606266'}" style="width: 95%;">
             <el-table-column type="index" label="编号" width="80">
             </el-table-column>
-            <el-table-column prop="name" label="护工姓名" width="140">
+            <el-table-column prop="userInfo" label="护工姓名"  width="130">
+              <template slot-scope="scope">
+                {{scope.row.userInfo.userRealName}}
+              </template>
             </el-table-column>
-            <el-table-column prop="account" label="护工账号" width="180">
+            <el-table-column prop="userPhone" label="手机号" width="160">
             </el-table-column>
-            <el-table-column prop="room" label="房间号" width="140">
+            <el-table-column prop="nurseHealth" label="照顾健康等级" width="150" :show-overflow-tooltip="true">
             </el-table-column>
-            <el-table-column prop="bed" label="床位" width="140">
+            <el-table-column prop="monthlySalary" label="基本月薪" width="140">
             </el-table-column>
-            <el-table-column prop="oldname" label="老人姓名" width="140">
+            <el-table-column prop="importWay" label="导入方式" width="140">
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
@@ -140,8 +166,11 @@
           <el-pagination
             class="mainpagination"
             background
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="pageSize"
             layout="prev, pager, next"
-            :total="1000"
+            :total="total"
           >
           </el-pagination>
         </div>
@@ -243,6 +272,98 @@
         >
       </span>
     </el-dialog>
+
+    <!--新增护工-->
+    <el-dialog
+      title="新增护工"
+      :visible.sync="dialogVisibleAdd"
+      width="30%"
+      :before-close="handleCloseAdd"
+    >
+      <span>
+        <div style="display: flex">
+          <label style="width: 110px">真实姓名：</label>
+          <el-input
+            placeholder="请输入"
+            v-model="addName"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px">手机号码：</label>
+          <el-input
+            placeholder="请输入"
+            v-model="addPhone"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px">身份证类型：</label>
+          <el-select v-model="cardType" placeholder="请选择" @change="changeCardValue">
+            <el-option
+              v-for="item in cardOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+        </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px">身份证：</label>
+          <el-input
+            placeholder="请输入"
+            v-model="addCard"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>  
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px">基本月薪：</label>
+          <el-input
+            placeholder="如：3000"
+            v-model="addMonthlySalary"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px">升级薪资：</label>
+          <el-input
+            placeholder="每个照顾级别升级的薪资。如：300"
+            v-model="addAdditionalSalary"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px;margin-left:13px;">健康等级：</label>
+          <el-checkbox-group 
+            v-model="checkedHealth"
+            @change="healthChange"
+            > 
+          <el-checkbox v-for="item in healthList" :label="item" :key="item" style="margin-left:0px;">{{item}}</el-checkbox>
+          </el-checkbox-group>
+          <!-- <el-select v-model="grade" placeholder="请选择" @change="changeGradeValue">
+            <el-option
+              v-for="item in gradeOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select> -->
+        </div>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleAdd = false">取 消</el-button>
+        <el-button type="primary" @click="addNewNurse"
+          >新 增</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -252,6 +373,7 @@ export default {
   components: {
     NavMenu: NavMenu,
   },
+  inject: ['reload'],//注入reload方法
   data() {
     return {
       form: {
@@ -644,44 +766,74 @@ export default {
           oldCard: "330322198107011",
         },
       ],
+      total: 0,//分页共有多少条数据
+      currentPage: 1, //当前页数
+      pageSize: 5, //一页4条数据
+      nowUserName: '', //当前登录用户
+      sanId: '',
+      search: '',
+      select: '',
+      sanInfoId: '',
+      dialogVisibleAdd: false, //新增护工
+      addName: '',
+      addPhone: '',
+      cardType: '',
+      addCard: '',
+      addMonthlySalary: '',
+      addAdditionalSalary: '',
+      grade: '',
+      gradeOptions: [
+        {
+          value: "选项1",
+          label: "大体健康",
+        },
+        {
+          value: "选项2",
+          label: "恢复健康",
+        },
+        {
+          value: "选项3",
+          label: "基本自理",
+        },
+        {
+          value: "选项4",
+          label: "丧失自理",
+        },
+      ],
+      healthLevel: '',
+      cardOptions: [
+        {
+          value: "选项1",
+          label: "居民身份证",
+        },
+        {
+          value: "选项2",
+          label: "港澳居民来往内地通行证",
+        },
+        {
+          value: "选项3",
+          label: "台湾居民来往大陆通行证",
+        },
+        {
+          value: "选项4",
+          label: "临时身份证",
+        },
+        {
+          value: "选项5",
+          label: "护照",
+        },
+      ],
+      addCardType: '',
+      uploadExcel: 'https://www.tangyihan.top/web/nurse/excelUpload',
+      myHeaders:{'Access-Control-Allow-Origin':'*'},
+      checkedHealth: [],
+      healthList: ['大体健康','恢复健康','基本自理','丧失自理']
     };
   },
   methods: {
-    //登录
-    onSubmit() {
-      console.log("username:" + this.form.username);
-      console.log("password:" + this.form.password);
-      //获取用户登录接口
-      this.$ajax
-        .get(
-          "http://localhost:63342/test/controller/check_user.php?username=" +
-            this.form.username +
-            "&password=" +
-            this.form.password
-        )
-        .then((response) => {
-          console.log(JSON.stringify(response.data));
-          if (response.data.resultCode == 200) {
-            this.$router.push({
-              path: "/index",
-              query: {
-                username: this.form.username,
-                password: this.form.password,
-              },
-            });
-            sessionStorage.setItem("userName", this.form.username);
-            sessionStorage.setItem("userID", response.data.data[0].userid);
-          }
-        })
-        .catch((res) => {
-          console.log(res);
-        });
-    },
-    //登记入住
-    checkIn() {
-      this.$router.push({ path: "/checkIn" });
-    },
-
+    checkIn() {},
+    handleCurrentChange() {},
+    searchByKey() {},
     handleEdit(index, row) {
       console.log(index, row);
     },
@@ -714,13 +866,113 @@ export default {
         })
         .catch((_) => {});
     },
+    handleCloseAdd(done) {
+      this.$confirm("确认关闭？")
+        .then((_) => {
+          done();
+        })
+        .catch((_) => {});
+    },
     //与老人解除绑定关系
     cancelOld(index) {
       console.log(this.oldInfoList[index].oldName);
     },
+
+     //当前分页有多少条数据
+    handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      //当前界面是分页的第几页
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+        this.currentPage = val;
+        this.getNurseList();
+        console.log(this.currentPage)
+        // this.reload();
+      },
+      //跨页编号连续
+      table_index(index){
+        return (this.currentPage-1) * this.pageSize + index + 1
+      },
+    //获取当前疗养院护工列表
+    getNurseList() {
+      this.$ajax
+        .get(
+          "https://www.tangyihan.top/web/nurse/getNursePage?current="+this.currentPage+"&sanInfoId="+this.sanInfoId+"&size=5"
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.tableData = response.data.data.records
+          this.total = response.data.data.total
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+    //新增护工，单个导入
+    addOneNurse() {
+      this.dialogVisibleAdd = true;
+    },
+    //选择健康等级
+    changeGradeValue() {
+      this.healthLevel=this.gradeOptions.find(val=>val.value==this.grade).label
+      console.log(this.healthLevel)
+    },
+    //选择护工身份证类型
+    changeCardValue() {
+      this.addCardType=this.cardOptions.find(val=>val.value==this.cardType).label
+      console.log(this.addCardType)
+    },
+    //新增护工接口，单个导入
+    addNewNurse() {
+       this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/nurse/insertNurseByHand?additionalSalary="+this.addAdditionalSalary+"&cardId="+this.addCard+
+          "&cardType="+this.addCardType+"&importWay="+"单个导入"+"&monthlySalary="+this.addMonthlySalary+
+          "&nurseHealth="+this.healthLevel+"&phone="+this.addPhone+"&realName="+this.addName+"&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.reload();
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+    // 上传excel方法
+    uploadImage(param){
+      const formData = new FormData()
+      formData.append('file', param.file)
+      this.$ajax
+      .post("https://www.tangyihan.top/web/nurse/excelUpload?sanId="+this.sanId+"&sanInfoId="+this.sanInfoId, formData).then(response => {
+        console.log(response.data);
+        this.reload();
+        // // this.form.picUrl = process.env.VUE_APP_BASE_API + response.imgUrl
+        // this.businessPicture = response.data.data
+      }).catch(response => {
+        console.log('上传失败')
+      })
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      console.log(file);
+    },
+    healthChange(val) {
+      console.log(val)
+      this.healthLevel = val.join('+');
+      console.log(this.healthLevel);
+    }
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.nowUserName = sessionStorage.getItem("userName");
+    this.sanInfoId = sessionStorage.getItem("sanInfoId");
+    this.sanId = sessionStorage.getItem("sanId");
+
+    this.getNurseList();
+  },
 };
 </script>
 
@@ -788,6 +1040,17 @@ export default {
     .topRight {
       display: flex;
       margin-left: 1020px;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+    .userNameleft {
+      margin-left: 940px;
+      display: flex;
       img {
         width: 20px;
         height: 20px;

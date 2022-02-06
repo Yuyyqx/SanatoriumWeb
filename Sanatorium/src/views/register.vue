@@ -74,8 +74,13 @@
         <div class="content1">
           <div class="imgBox">
             <el-upload
-              action="https://jsonplaceholder.typicode.com/posts/"
+              ref="upload"
+              :action="uploadImg"
               list-type="picture-card"
+              :show-file-list="true"
+              multiple
+              :before-upload="beforeAvatarUpload"
+              :http-request="uploadImage"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
             >
@@ -128,14 +133,14 @@ export default {
       locationFlag: false,
       dialogImageUrl: "",
       dialogVisible: false,
+      uploadImg:"https://www.tangyihan.top/web/sanatoriumUser/uploadImg",
+      myHeaders:{'Access-Control-Allow-Origin':'*'},
+      businessPicture: ''
     };
   },
   methods: {
     //注册
     onSubmit() {
-      // this.$router.push({ path: "/login" });
-      //     console.log("username:"+this.form.username);
-      //     console.log("password:"+this.form.password);
       //获取用户注册接口
       this.$ajax
         .post(
@@ -152,21 +157,22 @@ export default {
             "&pwd=" +
             this.form.password +
             "&sanName=" +
-            this.form.person
+            this.form.person +
+            "&businessPicture=" +
+            this.businessPicture
         )
         .then((response) => {
           console.log(response.data);
           if (response.data.code == 0) {
             alert("注册成功！");
             this.$router.push({
-              path: "/login",
-              query: {
-                username: this.form.username,
-                password: this.form.password,
-              },
+              path: "/login"
+              // query: {
+              //   username: this.form.username,
+              //   password: this.form.password,
+              // },
             });
-            sessionStorage.setItem("userName", this.form.username);
-            sessionStorage.setItem("userID", response.data.data[0].userid);
+            // sessionStorage.setItem("userName", this.form.username);
           }
         })
         .catch((res) => {
@@ -239,13 +245,54 @@ export default {
       this.form.address = data;
     },
 
+    // 上传图片方法
+    uploadImage(param){
+      const formData = new FormData()
+      formData.append('img', param.file)
+      this.$ajax
+      .post("https://www.tangyihan.top/web/sanatoriumUser/uploadImg", formData).then(response => {
+        console.log('上传图片成功')
+        // this.form.picUrl = process.env.VUE_APP_BASE_API + response.imgUrl
+        this.businessPicture = response.data.data
+      }).catch(response => {
+        console.log('图片上传失败')
+      })
+    },
+    // 资质照片上传前校验
+    beforeAvatarUpload(file) {
+      const isPic = file.type.indexOf('image') >= 0;
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isPic) {
+        this.$message.error('资质照片只能为图片格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过 2MB!');
+      }
+      return isPic && isLt2M;
+    },
+
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+      // let newfile = new FormData();
+      // newfile.append("img",file.raw);
+      // console.log(newfile.get("img"));
+      // let config = {
+      //   headers: {"Content-Type":"application/octet-stream;charset=utf-8"}
+      // };
+      // const instance = $ajax.create({
+      //   withCredentials: true
+      // });
+      // instance.post("https://www.tangyihan.top/web/sanatoriumUser/uploadImg",newfile,config)
+      // .then(response=> {
+      //   alert("000");
+      // })
+      // console.log(file);
     },
+
   },
   created() {},
   mounted() {},

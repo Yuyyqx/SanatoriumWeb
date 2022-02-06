@@ -143,7 +143,8 @@
             size="mini"
             >登记入住</el-button
           > -->
-          <el-table class="maintable" :data="tableData.slice((currentPage - 1) * pageSize, currentPage*pageSize)">
+          <el-table class="maintable" :data="tableData"
+          :header-cell-style="{background:'#eef1f6',color:'#606266'}">
             <el-table-column type="index" label="编号" width="60" :index="table_index">
             </el-table-column>
             <el-table-column prop="name" label="姓名" width="120">
@@ -225,6 +226,7 @@ export default {
   components: {
     NavMenu: NavMenu,
   },
+  inject: ['reload'],//注入reload方法
   data() {
     return {
       form: {
@@ -588,12 +590,14 @@ export default {
         },
       ],
       type: "",
-      total: 4,//分页共有多少条数据
+      total: 0,//分页共有多少条数据
       currentPage: 1, //当前页数
       pageSize: 3, //一页3条数据
       search: '',
       select: '',
-      nowUserName: '' //当前登录用户
+      nowUserName: '', //当前登录用户
+      sanId: '',
+      sanInfoId: ''
     };
   },
   methods: {
@@ -621,11 +625,31 @@ export default {
     handleDelete(index, row) {
       console.log(index, row);
     },
-    searchByKey() {}
+    searchByKey() {},
+
+    //获取当前疗养院老人列表
+    getOldList() {
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/old/getOldPage?current="+this.currentPage+"&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId+"&size=3"
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.tableData = response.data.data.records
+          this.total = response.data.data.total
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
   },
   created() {},
   mounted() {
     this.nowUserName = sessionStorage.getItem("userName");
+    this.sanInfoId = sessionStorage.getItem("sanInfoId");
+    this.sanId = sessionStorage.getItem("sanId");
+
+    this.getOldList();
   },
 };
 </script>
