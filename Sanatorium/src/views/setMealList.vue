@@ -21,7 +21,7 @@
       <div class="top">
         <!-- <img id="logo" src="../../static/images/logo.png"/> -->
         <img src="../../static/images/catalogue.png" />
-        <div class="topRight">
+        <div :class="nowUserName!=''?'userNameleft': 'topRight'" >
           <img
             style="width: 26px; height: 26px; margin-top: 5px"
             src="../../static/images/a12.jpg"
@@ -32,7 +32,7 @@
               font-size: 10px;
               padding: 11px 5px 5px 5px;
             "
-            >用户名</label
+            >{{nowUserName}}</label
           >
           <img src="../../static/images/letter.png" />
           <img
@@ -253,6 +253,7 @@ export default {
   components: {
     NavMenu: NavMenu,
   },
+  inject: ['reload'],//注入reload方法
   data() {
     return {
       form: {
@@ -660,6 +661,9 @@ export default {
           iseditor: false,
         },
       ],
+      nowUserName: '', //当前登录用户
+      sanId: '',
+      sanInfoId: '',
     };
   },
   methods: {
@@ -691,7 +695,11 @@ export default {
   },
   created() {
   },
-  mounted() {},
+  mounted() {
+    this.nowUserName = sessionStorage.getItem("userName");
+    this.sanInfoId = sessionStorage.getItem("sanInfoId");
+    this.sanId = sessionStorage.getItem("sanId");
+  },
 };
 </script>
 
@@ -759,6 +767,17 @@ export default {
     .topRight {
       display: flex;
       margin-left: 1020px;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+    .userNameleft {
+      margin-left: 940px;
+      display: flex;
       img {
         width: 20px;
         height: 20px;

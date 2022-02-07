@@ -26,20 +26,20 @@
             <div class="conline"></div>
             <div class="coninput">
               <label style="color: red">*</label>家属账号：
-              <el-input placeholder="请输入" v-model="input1" style="width:60%;"> </el-input>
+              <el-input placeholder="请输入" v-model="familyAmmount" style="width:60%;"> </el-input>
             </div>
             <div class="coninput">
               <label style="color: red">*</label>家属验证：
-              <el-input placeholder="请输入" v-model="input1" style="width:60%;"> </el-input>
+              <el-input placeholder="请输入" v-model="familyCode" style="width:60%;"> </el-input>
             </div>
             <div class="coninput">
               <label style="color: red">*</label>老人登记：
-              <el-select v-model="value" placeholder="请选择">
+              <el-select v-model="chooseOldValue" placeholder="请选择" @focus="getOldListFamily" @change="changeOldInfoValue">
                 <el-option
                   v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.oldId"
+                  :label="item.oldName"
+                  :value="item.oldId"
                 >
                 </el-option>
               </el-select>
@@ -55,9 +55,10 @@
                   ><label style="color: red">*</label>入院类型：</label
                 >
                 <el-select
-                  v-model="value1"
+                  v-model="grade"
                   placeholder="请选择"
                   style="width: 60%;"
+                  @change="changeGradeValue"
                 >
                   <el-option
                     v-for="item in options1"
@@ -68,14 +69,14 @@
                   </el-option>
                 </el-select>
               </div>
-              <div class="conprice">
+              <div class="conprice" v-if="roomFlag">
                 <div>
                   价格列表
                 </div>
                 <div v-for="(item, index) in priceType">
                   <label class="conpricelabel"
-                    >{{ item.num }}——{{ item.type }}——价格最高{{
-                      item.price
+                    >{{ item.roomTypeName }}——{{ healthLevel }}——价格最高{{
+                      item.singleMonthlyPrice
                     }}/月</label
                   >
                 </div>
@@ -89,15 +90,35 @@
                   :options="optionsRoom"
                   @change="handleChangeRoom"
                   style="width: 60%;"
+                  :props="{ value: 'id',label: 'name',children: 'child'}"
                 ></el-cascader>
               </div>
               <div class="orderMeal">
                 <div class="contype">
                   <label style="width: 110px"
-                    ><label style="color: red">*</label>统一订餐：</label
+                    ><label style="color: red">*</label>是否在疗养院订餐：</label
                   >
                   <el-switch
-                    v-model="value"
+                    v-model="orderMealSan"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    style="width: 100%;"
+                  >
+                  </el-switch>
+                </div>
+                <div style="margin-top: 5px; margin-left: -40px">
+                  <label style="width: 100px; color: red; font-size: 12px"
+                    >注：确定统一订餐是否需要备注事项</label
+                  >
+                </div>
+              </div>
+              <div class="orderMeal" v-if="orderMealFlag != 0">
+                <div class="contype">
+                  <label style="width: 110px"
+                    ><label style="color: red">*</label>是否自定义套餐：</label
+                  >
+                  <el-switch
+                    v-model="orderMealMy"
                     active-color="#13ce66"
                     inactive-color="#ff4949"
                     style="width: 100%;"
@@ -470,6 +491,17 @@ export default {
       inputVisible: false,
       inputValue: "",
       textarea: "",
+      sanId: '',
+      sanInfoId: '',
+      familyAmmount: '',//家属账号
+      familyCode: '',//家属验证码
+      chooseOldValue: '',//选择的老人信息
+      healthLevel: '',//入院类型
+      grade: '',
+      roomFlag: false,//是否显示价格列表
+      orderMealSan: true,//是否在疗养院订餐
+      orderMealMy: false,//是否自定义套餐
+      orderMealFlag: 1,
     };
   },
   methods: {
@@ -510,9 +542,51 @@ export default {
       this.inputVisible = false;
       this.inputValue = "";
     },
+
+    //根据家长账号和验证码获取老人列表接口
+    getOldListFamily() {
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/old/registerOld_1?code="+this.familyCode+"&sanId="+this.sanId+"&userAccount="+this.familyAmmount
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.options = response.data.data.oldList
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+    //选择老人
+    changeOldInfoValue() {
+      // this.healthLevel=this.options.find(val=>val.value==this.chooseOldValue).label
+      console.log(this.chooseOldValue)
+    },
+    //根据入住类型返回对应房间接口
+    changeGradeValue() {
+      this.healthLevel=this.options1.find(val=>val.value==this.grade).label
+      console.log(this.healthLevel)
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/old/registerOld_2?healthLevel="+this.healthLevel+"&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.priceType = response.data.data.roomTypeList
+          this.optionsRoom = response.data.data.roomList
+          this.roomFlag = true
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.sanInfoId = sessionStorage.getItem("sanInfoId");
+    this.sanId = sessionStorage.getItem("sanId");
+
+  },
 };
 </script>
 

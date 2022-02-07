@@ -88,9 +88,17 @@
               size="mini"
               >新增账号</el-button
             >
-            <el-button
+            <el-upload
+              ref="upload"
+              :action="uploadExcel"
+              :show-file-list="false"
+              multiple
+              :http-request="uploadImage"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove"
+            >
+              <el-button
               style="
-                width: 7%;
                 background: #63cda5;
                 border: 1px solid #63cda5;
                 margin-left: 30px;
@@ -100,6 +108,7 @@
               size="mini"
               >Excel导入</el-button
             >
+            </el-upload>
           </div>
         </div>
 
@@ -110,15 +119,16 @@
             :data="tableData"
             style="width: 95%; margin: 20px auto"
             :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+            @row-click="rowClick" 
           >
             <el-table-column type="index" label="编号" width="80">
             </el-table-column>
             <el-table-column prop="sanEmail" label="账号邮箱" width="180">
             </el-table-column>
-            <!-- <el-table-column prop="phone" label="手机号" width="180">
+            <el-table-column prop="phone" label="手机号" width="180">
             </el-table-column>
-            <el-table-column prop="way" label="导入方式" width="140">
-            </el-table-column> -->
+            <el-table-column prop="importWay" label="导入方式" width="140">
+            </el-table-column>
             <el-table-column prop="createTime" label="创建时间" width="120">
               <template slot-scope="scope">{{scope.row.createTime | dateYMDHMSFormat}}</template>
             </el-table-column>
@@ -132,17 +142,17 @@
                 <el-button
                   size="mini"
                   type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
+                  @click.stop="handleDelete(scope.$index, scope.row)"
                   >删除</el-button
                 >
                 <el-button
                   size="mini"
-                  @click="handleEdit(scope.$index, scope.row)"
-                  >禁用</el-button
+                  @click.stop="handleDisable(scope.$index, scope.row)"
+                  >{{scope.row.isDisable | isOpenFilter}}</el-button
                 >
                 <el-button
                   size="mini"
-                  @click="handleEdit(scope.$index, scope.row)"
+                  @click.stop="handleEdit(scope.$index, scope.row)"
                   >操作追溯</el-button
                 >
               </template>
@@ -162,6 +172,8 @@
         </div>
       </div>
     </div>
+
+    <!--新增账号-->
     <el-dialog
       title="新增账号"
       :visible.sync="dialogVisible"
@@ -188,13 +200,23 @@
           >
           </el-input>
         </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px">手机号码：</label>
+          <el-input
+            placeholder="请输入"
+            v-model="amountPhone"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
         <div style="display: flex; margin-top: 20px; margin-left: 10px">
-          <label style="width: 120px">开启使用：</label>
+          <label style="width: 120px">是否禁用：</label>
           <el-switch
             v-model="isOpen"
             active-color="#13ce66"
             inactive-color="#ff4949"
             style="width: 100%; margin-left: 0px"
+            @change="isOpenClick"
           >
           </el-switch>
         </div>
@@ -203,6 +225,41 @@
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addNewAccount"
           >新 增</el-button
+        >
+      </span>
+    </el-dialog>
+
+    <!--修改账号-->
+    <el-dialog
+      title="修改账号"
+      :visible.sync="dialogVisibleEdit"
+      width="30%"
+      :before-close="handleCloseEdit"
+    >
+      <span>
+        <div style="display: flex">
+          <label style="width: 110px">账号邮箱：</label>
+          <el-input
+            placeholder="请输入"
+            v-model="editEmail"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px">手机号码：</label>
+          <el-input
+            placeholder="请输入"
+            v-model="editPhone"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleEdit = false">取 消</el-button>
+        <el-button type="primary" @click="editAccount"
+          >更 新</el-button
         >
       </span>
     </el-dialog>
@@ -544,55 +601,14 @@ export default {
           ],
         },
       ],
-      tableData: [
-        // {
-        //   email: "2211315784@qq.com",
-        //   date: "2021-11-02",
-        //   way: "认证疗养院",
-        //   area: "A",
-        //   phone: "19858104363",
-        // },
-        // {
-        //   email: "2211315785@qq.com",
-        //   date: "2021-11-02",
-        //   way: "认证疗养院",
-        //   area: "A",
-        //   phone: "17858104221",
-        // },
-        // {
-        //   email: "2211315786@qq.com",
-        //   date: "2021-11-02",
-        //   way: "认证疗养院",
-        //   area: "A",
-        //   phone: "17858005278",
-        // },
-        // {
-        //   email: "2211315791@qq.com",
-        //   date: "2021-11-02",
-        //   way: "认证疗养院",
-        //   area: "A",
-        //   phone: "19858124067",
-        // },
-        // {
-        //   email: "2211315792@qq.com",
-        //   date: "2021-11-02",
-        //   way: "认证疗养院",
-        //   area: "A",
-        //   phone: "19858105120",
-        // },
-        // {
-        //   email: "2211315795@qq.com",
-        //   date: "2021-11-02",
-        //   way: "新增账号",
-        //   area: "A",
-        //   phone: "19858108198",
-        // },
-      ],
+      tableData: [],
       type: "",
       dialogVisible: false,
       email: "",
       password: "123456",
-      isOpen: true,
+      amountPhone: '',
+      isOpen: false,
+      isOpenFlag: 0,
       total: 0,//分页共有多少条数据
       currentPage: 1, //当前页数
       pageSize: 6, //一页4条数据
@@ -600,7 +616,13 @@ export default {
       sanId: '',
       sanInfoId: '',
       select: '',
-      search: ''
+      search: '',
+      uploadExcel: 'https://www.tangyihan.top/web/sanatoriumUser/excelUploadSan',
+      myHeaders:{'Access-Control-Allow-Origin':'*'},
+      dialogVisibleEdit: false,
+      editEmail: "",
+      editPhone: '',
+      updateSanId: ''
     };
   },
   filters: {
@@ -608,7 +630,12 @@ export default {
       if (value == 1) return '是'
       else
       return '否'
-    }
+    },
+    isOpenFilter: function (value) {
+      if (value == 1) return '开启'
+      else
+      return '禁用'
+    },
   },
   methods: {
     //当前分页有多少条数据
@@ -632,6 +659,13 @@ export default {
       console.log(index, row);
     },
     handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then((_) => {
+          done();
+        })
+        .catch((_) => {});
+    },
+    handleCloseEdit(done) {
       this.$confirm("确认关闭？")
         .then((_) => {
           done();
@@ -663,8 +697,8 @@ export default {
     addNewAccount() {
       this.$ajax
         .post(
-          "https://www.tangyihan.top/web/sanatoriumUser/insertAccount?email="+this.email+"&sanId="+this.sanId+
-          "&sanInfoId="+this.sanInfoId
+          "https://www.tangyihan.top/web/sanatoriumUser/insertAccount?email="+this.email+"&isDisable="+this.isOpenFlag+
+          "&phone="+this.amountPhone+"&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId
         )
         .then((response) => {
           console.log(response.data);
@@ -690,6 +724,71 @@ export default {
           console.log(res);
         });
     },
+    //监控禁用按钮状态
+    isOpenClick(val) {
+      if(val == false) {
+        this.isOpenFlag = 0
+      } else {
+        this.isOpenFlag = 1
+      }
+      console.log(this.isOpenFlag)
+    },
+    //开启或禁用账号
+    handleDisable(index, row) {
+      console.log(index, row);
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/sanatoriumUser/banAccount?banSanId="+row.sanId+"&sanId="+this.sanId+
+          "&sanInfoId="+this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.reload();
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+    // 上传excel方法
+    uploadImage(param){
+      const formData = new FormData()
+      formData.append('file', param.file)
+      this.$ajax
+      .post("https://www.tangyihan.top/web/sanatoriumUser/excelUploadSan?sanId="+this.sanId+"&sanInfoId="+this.sanInfoId, formData).then(response => {
+        console.log(response.data);
+        this.reload();
+      }).catch(response => {
+        console.log('上传失败')
+      })
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      console.log(file);
+    },
+    rowClick(row,column) {
+      console.log(row,column)
+      this.editEmail = row.sanEmail
+      this.editPhone = row.phone
+      this.updateSanId = row.sanId
+      this.dialogVisibleEdit = true;
+    },
+    //修改账号接口
+    editAccount() {
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/sanatoriumUser/updateMyAccount?email="+this.editEmail+
+          "&phone="+this.editPhone+"&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId+"&updateSanId="+this.updateSanId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.reload();
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    }
   },
   created() {},
   mounted() {
