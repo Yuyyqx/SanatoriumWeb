@@ -121,13 +121,17 @@
               > -->
               <el-table class="maintable" :data="tableData" 
               :header-cell-style="{background:'#eef1f6',color:'#606266'}">
-                <el-table-column type="index" label="编号" width="80">
+                <el-table-column type="index" label="编号" width="60">
                 </el-table-column>
-                <el-table-column prop="building" label="楼号" width="180">
+                <el-table-column prop="buildingName" label="楼号" width="130">
                 </el-table-column>
-                <el-table-column prop="roomNumber" label="房间号码" width="180">
+                <el-table-column prop="floorName" label="层号" width="130">
                 </el-table-column>
-                <el-table-column prop="usedBed" label="已用床位" width="160">
+                <el-table-column prop="roomNumber" label="房间号码" width="130">
+                </el-table-column>
+                <el-table-column prop="usedBed" label="已用床位" width="130">
+                </el-table-column>
+                <el-table-column prop="monthlyPrice" label="床位费用/月" width="130">
                 </el-table-column>
                 <!-- <el-table-column prop="beds" label="床位数量" width="145">
                   <template slot-scope="scope">
@@ -203,7 +207,7 @@
           ></el-cascader>
         </div>
         <div style="display: flex; margin-top: 20px">
-          <label style="width: 110px">护助等级：</label>
+          <label style="width: 110px">健康等级：</label>
           <el-select v-model="grade" placeholder="请选择" @change="changeGradeValue">
             <el-option
               v-for="item in gradeOptions"
@@ -213,6 +217,20 @@
             >
             </el-option>
           </el-select>
+        </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px">健康等级费用：</label>
+          <el-input
+            placeholder="请输入"
+            v-model="healthMonthlyPrice"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+        <div style="margin-top: 5px; margin-left: -40px">
+          <label style="width: 100px; color: red; font-size: 12px"
+          >注：大体健康:30、恢复健康:60、基本自理:90、丧失自理:120</label
+          >
         </div>
       </span>
       <span slot="footer" class="dialog-footer">
@@ -566,111 +584,14 @@ export default {
       search: "",
       index: 0,
       select: "全部",
-      tableData: [
-        {
-          roomNum: "911",
-          used: "1/1",
-          grade: "大体健康",
-          buildNum: "A",
-          equipment: "优",
-        },
-        {
-          roomNum: "912",
-          used: "0/1",
-          grade: "基本自理",
-          buildNum: "A",
-          equipment: "优",
-        },
-        {
-          roomNum: "913",
-          used: "0/1",
-          grade: "丧失能力",
-          buildNum: "A",
-          equipment: "优",
-        },
-        {
-          roomNum: "914",
-          used: "0/1",
-          grade: "丧失能力",
-          buildNum: "A",
-          equipment: "优",
-        },
-      ],
+      tableData: [],
       value: "",
       percentNum: "33",
       dialogVisible: false,
       roomType: "",
       roomNumber: [],
       grade: "",
-      roomNumberOptions: [
-        {
-          value: "1",
-          label: "A楼",
-          children: [
-            {
-              value: "11",
-              label: "1",
-              children: [
-                {
-                  value: "111",
-                  label: "101",
-                },
-                {
-                  value: "112",
-                  label: "102",
-                },
-                {
-                  value: "113",
-                  label: "103",
-                },
-              ],
-            },
-            {
-              value: "12",
-              label: "2",
-              children: [
-                {
-                  value: "121",
-                  label: "201",
-                },{
-                  value: "122",
-                  label: "202",
-                },{
-                  value: "123",
-                  label: "203",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "2",
-          label: "B楼",
-          children: [
-            {
-              value: "29",
-              label: "9",
-              children: [
-                {
-                  value: "291",
-                  label: "901",
-                },{
-                  value: "292",
-                  label: "902",
-                },
-                {
-                  value: "293",
-                  label: "903",
-                },
-                {
-                  value: "2916",
-                  label: "916",
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      roomNumberOptions: [],
       gradeOptions: [
         {
           value: "选项1",
@@ -698,7 +619,10 @@ export default {
       addFloor: '',//添加层数
       addRoomNumber: '',//添加房间号
       sanId: '',
-      healthLevel: ''
+      sanInfoId: '',
+      healthLevel: '',
+      healthMonthlyPrice: '',
+      roomId: ''
     };
   },
   methods: {
@@ -743,6 +667,7 @@ export default {
     //获取选择的楼号、层数以及房间号
     handleChange(value) {
       console.log(value);
+      this.roomId = value[2];
       if (this.roomNumber.length != 0) {       
         let arr = this.$refs['cascaderMallCatergory'].getCheckedNodes()[0].pathLabels
         console.log('arr', arr);
@@ -760,7 +685,8 @@ export default {
     getRoomList() {
       this.$ajax
         .get(
-          "https://www.tangyihan.top/web/room/getRoomList?current="+this.currentPage+"&roomTypeId="+this.roomTypeId+"&size=4"
+          "https://www.tangyihan.top/web/room/getRoomList?current="+this.currentPage+"&roomTypeId="+
+          this.roomTypeId+"&sanInfoId="+this.sanInfoId+"&size=4"
         )
         .then((response) => {
           console.log(response.data);
@@ -772,12 +698,26 @@ export default {
           console.log(res);
         });
     },
+    //获取选择房间的列表
+    getRoomsDataList() {
+      this.$ajax
+        .get(
+          "https://www.tangyihan.top/web/room/getRoomsData?sanId="+this.sanId+"&sanInfoId="+this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.roomNumberOptions = response.data.data
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
     //新增房间接口
     addNewRoom() {
       this.$ajax
         .post(
-          "https://www.tangyihan.top/web/room/insertRoom?building="+this.addBuilding+"&floor="+this.addFloor+
-          "&healthLevel="+this.healthLevel+"&roomNumber="+this.addRoomNumber+"&roomTypeId="+this.roomTypeId+"&sanId="+this.sanId
+          "https://www.tangyihan.top/web/room/insertRoom?healthLevel="+this.healthLevel+
+          "&healthMonthlyPrice="+this.healthMonthlyPrice+"&roomId="+this.roomId+"&roomTypeId="+this.roomTypeId+"&sanId="+this.sanId
         )
         .then((response) => {
           console.log(response.data);
@@ -824,11 +764,13 @@ export default {
   },
   mounted() {
     this.nowUserName = sessionStorage.getItem("userName");
+    this.sanInfoId = sessionStorage.getItem("sanInfoId");
     this.sanId = sessionStorage.getItem("sanId");
 
     if (this.currentPage == 1) {
       this.getRoomList();
     }
+    this.getRoomsDataList();
   },
 };
 </script>

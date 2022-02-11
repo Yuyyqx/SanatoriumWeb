@@ -83,6 +83,8 @@
               :http-request="uploadImage"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
+              :on-success="handleSuccess"
+              :headers="myHeaders"
             >
               <i class="el-icon-plus"></i>
             </el-upload>
@@ -96,7 +98,7 @@
     <el-button class="submit" type="primary" @click="onSubmit"
       >立即注册</el-button
     >
-    <lacation v-if="locationFlag" @send-address="sendAddress"></lacation>
+    <lacation v-if="locationFlag" @send-address="sendAddress" @send-lng="sendLng"></lacation>
   </div>
 </template>
 <script>
@@ -123,6 +125,8 @@ export default {
         person: "",
         email: "",
         number: "",
+        sanLongitude: "",
+        sanLatitude:""
       },
 
       formData: new FormData(),
@@ -133,7 +137,7 @@ export default {
       locationFlag: false,
       dialogImageUrl: "",
       dialogVisible: false,
-      uploadImg:"https://www.tangyihan.top/web/sanatoriumUser/uploadImg",
+      uploadImg:"https://jsonplaceholder.typicode.com/posts/",
       myHeaders:{'Access-Control-Allow-Origin':'*'},
       businessPicture: ''
     };
@@ -144,7 +148,7 @@ export default {
       //获取用户注册接口
       this.$ajax
         .post(
-          "https://www.tangyihan.top/web/sanatoriumUser/identifiedSanatorium?director=" +
+          "https://www.tangyihan.top/common/sanatoriumInfo/identifiedSanatoriumInfo?director=" +
             this.form.name +
             "&email=" +
             this.form.email +
@@ -154,12 +158,13 @@ export default {
             this.form.address +
             "&phone=" +
             this.form.phone +
-            "&pwd=" +
-            this.form.password +
-            "&sanName=" +
-            this.form.person +
-            "&businessPicture=" +
-            this.businessPicture
+            "&sanLatitude=" +
+            this.form.sanLatitude +
+            "&sanLongitude=" +
+            this.form.sanLongitude +
+             "&sanName=" +
+            this.form.person ,
+            JSON.stringify(this.businessPicture),{emulateJSON:true}
         )
         .then((response) => {
           console.log(response.data);
@@ -244,19 +249,27 @@ export default {
       console.log(data);
       this.form.address = data;
     },
+    sendLng(center) {
+      console.log(center)
+      this.form.sanLongitude = center[0]
+      this.form.sanLatitude = center[1]
+    },
 
     // 上传图片方法
     uploadImage(param){
       const formData = new FormData()
-      formData.append('img', param.file)
-      this.$ajax
-      .post("https://www.tangyihan.top/web/sanatoriumUser/uploadImg", formData).then(response => {
-        console.log('上传图片成功')
-        // this.form.picUrl = process.env.VUE_APP_BASE_API + response.imgUrl
-        this.businessPicture = response.data.data
-      }).catch(response => {
-        console.log('图片上传失败')
-      })
+      formData.append('businessPicture', param.file)
+      this.businessPicture = formData
+      console.log(param.file);
+      console.log(this.businessPicture)
+      // this.$ajax
+      // .post("https://www.tangyihan.top/web/sanatoriumUser/uploadImg", formData).then(response => {
+      //   console.log('上传图片成功')
+      //   // this.form.picUrl = process.env.VUE_APP_BASE_API + response.imgUrl
+      //   this.businessPicture = response.data.data
+      // }).catch(response => {
+      //   console.log('图片上传失败')
+      // })
     },
     // 资质照片上传前校验
     beforeAvatarUpload(file) {
@@ -274,9 +287,14 @@ export default {
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
+    handleSuccess(response, file, fileList) {
+      console.log(response)
+      console.log(file)
+    },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+      console.log(this.dialogImageUrl)
       // let newfile = new FormData();
       // newfile.append("img",file.raw);
       // console.log(newfile.get("img"));

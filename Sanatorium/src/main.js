@@ -11,6 +11,8 @@ import * as echarts from 'echarts';
 Vue.component('v-chart', echarts)
 Vue.use(elementUi)
 Vue.prototype.$ajax = axios
+axios.defaults.baseURL = 'https://www.tangyihan.top'
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 Vue.config.productionTip = false
 

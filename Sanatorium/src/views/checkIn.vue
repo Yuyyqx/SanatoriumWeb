@@ -52,7 +52,7 @@
             <el-scrollbar class="conscorll">
               <div class="contype">
                 <label style="width: 100px"
-                  ><label style="color: red">*</label>入院类型：</label
+                  ><label style="color: red">*</label>护理等级：</label
                 >
                 <el-select
                   v-model="grade"
@@ -69,13 +69,13 @@
                   </el-option>
                 </el-select>
               </div>
-              <div class="conprice" v-if="roomFlag">
+              <div class="conprice">
                 <div>
                   价格列表
                 </div>
                 <div v-for="(item, index) in priceType">
                   <label class="conpricelabel"
-                    >{{ item.roomTypeName }}——{{ healthLevel }}——价格最高{{
+                    >{{ item.roomTypeName }}——剩余房间数量 {{item.allBed-item.usedBed}}——价格{{
                       item.singleMonthlyPrice
                     }}/月</label
                   >
@@ -83,19 +83,55 @@
               </div>
               <div class="contype" >
                 <label style="width: 100px"
-                  ><label style="color: red">*</label>选择房间：</label
+                  ><label style="color: red">*</label>房间类型：</label
+                >
+                <el-select
+                  v-model="valueRoom"
+                  placeholder="请选择"
+                  style="width: 60%;"
+                  @change="handleChangeRoom"
+                >
+                  <el-option
+                    v-for="item in priceType"
+                    :key="item.roomTypeId"
+                    :label="item.roomTypeName"
+                    :value="item.roomTypeId"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+              <div style="margin-top: 5px; margin-left: -40px">
+                  <label style="width: 100px; color: red; font-size: 12px"
+                    >注：默认或不选则房间类型不限</label
+                  >
+                </div>
+              <div class="contype" >
+                <label style="width: 100px"
+                  ><label style="color: red">*</label>选择床位：</label
                 >
                 <el-cascader
-                  v-model="valueRoom"
-                  :options="optionsRoom"
-                  @change="handleChangeRoom"
-                  style="width: 60%;"
-                  :props="{ value: 'id',label: 'name',children: 'child'}"
-                ></el-cascader>
+            ref="cascaderMallCatergory"
+            v-model="roomNumber"
+            :options="roomNumberOptions"
+            :props="{ expandTrigger: 'hover' }"
+            @change="handleChange"
+          ></el-cascader>
+              </div>
+              <div class="contype" v-if="bedMoneyFlag" style="margin-left:-5px;">
+                <label style="width: 110px;line-height: 40px;"
+                  ><label style="color: red">*</label>床位费用：</label
+                >
+                <el-input
+                  placeholder="请输入"
+                  v-model="bedMoney"
+                  :disabled="true"
+                  style="width:60%;"
+                >
+                </el-input>
               </div>
               <div class="orderMeal">
                 <div class="contype">
-                  <label style="width: 110px"
+                  <label style="width: 220px"
                     ><label style="color: red">*</label>是否在疗养院订餐：</label
                   >
                   <el-switch
@@ -103,6 +139,7 @@
                     active-color="#13ce66"
                     inactive-color="#ff4949"
                     style="width: 100%;"
+                    @change="orderMealSanChange"
                   >
                   </el-switch>
                 </div>
@@ -114,7 +151,7 @@
               </div>
               <div class="orderMeal" v-if="orderMealFlag != 0">
                 <div class="contype">
-                  <label style="width: 110px"
+                  <label style="width: 190px"
                     ><label style="color: red">*</label>是否自定义套餐：</label
                   >
                   <el-switch
@@ -122,30 +159,14 @@
                     active-color="#13ce66"
                     inactive-color="#ff4949"
                     style="width: 100%;"
+                    @change="orderMealMyChange"
                   >
                   </el-switch>
-                </div>
-                <div style="margin-top: 5px; margin-left: -40px">
-                  <label style="width: 100px; color: red; font-size: 12px"
-                    >注：确定统一订餐是否需要备注事项</label
-                  >
-                </div>
-              </div>
-              <div class="conprice">
-                <div>
-                  价格列表
-                </div>
-                <div v-for="(item, index) in priceType">
-                  <label class="conpricelabel"
-                    >{{ item.num }}——{{ item.type }}——价格最高{{
-                      item.price
-                    }}/月</label
-                  >
                 </div>
               </div>
               <div class="orderMeal">
                 <div class="contype">
-                  <label style="width: 120px"
+                  <label style="width: 90px"
                     ><label style="color: red">*</label>收费推送：</label
                   >
                   <el-switch
@@ -163,10 +184,61 @@
                </div>
             </el-scrollbar>
           </div>
+          <!--预约护工-->
+          <div class="con1" v-if="active == 2">
+             <div class="contitle">预约护工</div>
+            <div class="conline"></div>
+            <el-scrollbar class="conscorll">
+              <div class="contype">
+                <label style="width: 100px;line-height:40px;"
+                  ><label style="color: red">*</label>评估等级：</label
+                >
+                <el-select
+                  v-model="gradeOld"
+                  placeholder="请选择"
+                  style="width: 60%;"
+                  @change="changeGradeOldValue"
+                >
+                  <el-option
+                    v-for="item in options1"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+              <div style="margin-top:15px;">
+                <el-table
+    ref="multipleTable"
+    :data="nurseData"
+    tooltip-effect="dark"
+    style="width: 85%;margin:0 auto;"
+    @select="handleSelectionChange"
+    :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+    <el-table-column
+      type="selection"
+      width="55">
+    </el-table-column>
+    <el-table-column
+      prop="userRealName"
+      label="姓名"
+      width="120">
+    </el-table-column>
+    <el-table-column
+      prop="monthlySalary"
+      label="工资/月"
+      show-overflow-tooltip>
+    </el-table-column>
+  </el-table>
+              </div>
+            </el-scrollbar>
+          </div>
           <!--个人信息-->
           <div class="con1" v-if="active == 3">
             <div class="contitle">个人信息</div>
             <div class="conline"></div>
+            <el-scrollbar class="conscorll">
               <div class="contype">
                 <label style="width: 110px;line-height: 40px;"
                   ><label style="color: red">*</label>老人姓名：</label
@@ -232,6 +304,7 @@
                 >
                 </el-input>
               </div>
+            </el-scrollbar>
           </div>
           <!--注意事项-->
           <div class="con2" v-if="active == 4">
@@ -409,78 +482,10 @@ export default {
         },
       ],
       value1: "",
-      priceType: [
-        {
-          num: "单人间",
-          type: "任意类型",
-          price: 5000,
-        },
-        {
-          num: "三人间",
-          type: "任意类型",
-          price: 3000,
-        },
-        {
-          num: "五人间",
-          type: "任意类型",
-          price: 2000,
-        },
-      ],
+      priceType: [],
       valueRoom: [],
-      optionsRoom: [
-        {
-          value: "A",
-          label: "A楼",
-          children: [
-            {
-              value: "1",
-              label: "1层",
-              children: [
-                {
-                  value: "101",
-                  label: "101房间",
-                },
-                {
-                  value: "102",
-                  label: "102房间",
-                },
-                {
-                  value: "103",
-                  label: "103房间",
-                },
-                {
-                  value: "104",
-                  label: "104房间",
-                },
-              ],
-            },
-            {
-              value: "B",
-              label: "B楼",
-              children: [
-                {
-                  value: "9",
-                  label: "9层",
-                },
-                {
-                  value: "10",
-                  label: "10层",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "C",
-          label: "C楼",
-          children: [
-            {
-              value: "11",
-              label: "11层",
-            },
-          ],
-        },
-      ],
+      roomNumber: [],
+      roomNumberOptions: [],
       oldName: "张三",
       oldCard: "330327200112012508",
       oldDate: "1980年12月11日",
@@ -498,10 +503,25 @@ export default {
       chooseOldValue: '',//选择的老人信息
       healthLevel: '',//入院类型
       grade: '',
-      roomFlag: false,//是否显示价格列表
       orderMealSan: true,//是否在疗养院订餐
       orderMealMy: false,//是否自定义套餐
       orderMealFlag: 1,
+      roomTypeId: '不限',//房间类型默认不限
+      bedId: '',//床位ID
+      bedMoneyFlag: false,//是否显示床位费用
+      bedMoney: '',
+      isOrderMeal: 1,//是否订餐
+      gradeOld: '',
+      nurseData: [
+        {
+          nurseId: "3904867874",
+          userRealName: '王小虎',
+          monthlySalary: '3000'
+        }
+      ],//护工列表
+      multipleSelection: [],
+      firstConnectId: '',//老人第一联系人家属ID
+      chooseNurseId: '',//选择的护工ID
     };
   },
   methods: {
@@ -513,6 +533,21 @@ export default {
     },
     //下一步
     next() {
+      if(this.active==2) {
+        this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/old/registerOld_3_next?baseHealth="+this.healthLevel+"&bedId="+this.bedId+
+          "&familyOldId="+this.chooseOldValue+"&firstConnectId="+this.firstConnectId+"&isOrderMeal="+this.isOrderMeal+
+          "&nurseId="+this.chooseNurseId+"&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.roomNumberOptions = response.data.data
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+      }
       if (this.active++ > 6) this.active = 0;
     },
     //上一步
@@ -522,6 +557,39 @@ export default {
     },
     handleChangeRoom(value) {
       console.log(value);
+      this.roomTypeId = value;
+      //根据护理等级和房间类型返回房间列表（当选择房间类型时）
+      if(this.grade!='') {
+        this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/old/registerOld_2_choose?healthLevel="+this.healthLevel+
+          "&roomTypeId="+this.roomTypeId+"&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.roomNumberOptions = response.data.data
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+      }
+    },
+    //获取选择的楼号、层数、房间号以及床位
+    handleChange(value) {
+      console.log(value);
+      this.bedId = value[3];
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/old/registerOld_2_pay?bedId="+this.bedId+"&sanId="+this.sanId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.bedMoney = response.data.data
+          this.bedMoneyFlag = true
+        })
+        .catch((res) => {
+          console.log(res);
+        });
     },
     handleClose(tag) {
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
@@ -552,6 +620,21 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.options = response.data.data.oldList
+          this.firstConnectId = response.data.data.userId
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+    //获取房间类型价格的列表
+    getRoomTypeMoneyList() {
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/old/registerOld_2_date?sanId="+this.sanId+"&sanInfoId="+this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.priceType = response.data.data
         })
         .catch((res) => {
           console.log(res);
@@ -566,26 +649,77 @@ export default {
     changeGradeValue() {
       this.healthLevel=this.options1.find(val=>val.value==this.grade).label
       console.log(this.healthLevel)
-      this.$ajax
+      //根据护理等级和房间类型返回房间列表（当不选择房间类型时）
+      if(this.roomTypeId=='不限') {
+        this.$ajax
         .post(
-          "https://www.tangyihan.top/web/old/registerOld_2?healthLevel="+this.healthLevel+"&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId
+          "https://www.tangyihan.top/web/old/registerOld_2_choose?healthLevel="+this.healthLevel+
+          "&roomTypeId="+this.roomTypeId+"&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId
         )
         .then((response) => {
           console.log(response.data);
-          this.priceType = response.data.data.roomTypeList
-          this.optionsRoom = response.data.data.roomList
-          this.roomFlag = true
+          this.roomNumberOptions = response.data.data
         })
         .catch((res) => {
           console.log(res);
         });
+      }
     },
+    //是否在疗养院订餐
+    orderMealSanChange(val) {
+      console.log(val)
+      if (val==false) {
+        this.isOrderMeal = 0
+      }
+    },
+    //是否自定义套餐
+    orderMealMyChange(val) {
+      console.log(val)
+      if(val==true&&this.isOrderMeal==1) {
+        this.isOrderMeal = 2
+      }
+    },
+    //根据老人健康评估等级返回护工列表接口
+    changeGradeOldValue() {
+      this.healthLevel=this.options1.find(val=>val.value==this.grade).label
+      console.log(this.healthLevel)
+      //根据护理等级和房间类型返回房间列表（当不选择房间类型时）
+      if(this.roomTypeId=='不限') {
+        this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/old/registerOld_3_choose?healthLevel="+this.healthLevel+
+          "&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.nurseData = response.data.data
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+      }
+    },
+    toggleSelection(rows) {
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row);
+          });
+        } else {
+          this.$refs.multipleTable.clearSelection();
+        }
+      },
+      handleSelectionChange(selection,row) {
+        this.multipleSelection = row;
+        console.log(selection,row)
+        this.chooseNurseId = row.nurseId
+      }
   },
   created() {},
   mounted() {
     this.sanInfoId = sessionStorage.getItem("sanInfoId");
     this.sanId = sessionStorage.getItem("sanId");
 
+    this.getRoomTypeMoneyList();
   },
 };
 </script>

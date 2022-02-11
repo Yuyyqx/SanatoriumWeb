@@ -54,7 +54,7 @@ export default {
           self.lat = e.lnglat.lat;
           self.center = [self.lng, self.lat];
           //   console.log(e.lnglat, 1999);
-
+          self.$emit('send-lng',self.center);
           let o = amapManager.getMap();
           if (!self.marker) {
             self.marker = new AMap.Marker({
@@ -68,7 +68,6 @@ export default {
           geocoder.getAddress(e.lnglat, function (status, result) {
             if (status === "complete" && result.regeocode) {
               self.address = result.regeocode.formattedAddress;
-
             //   console.log(self.address, "999地址");
             } else {
               log.error("根据经纬度查询地址失败");
@@ -102,6 +101,7 @@ export default {
                   self.address = result.formattedAddress;
                   self.$emit('send-address',result.formattedAddress)
                   self.center = [self.lng, self.lat];
+                  self.$emit('send-lng',self.center);
                   //   console.log(self.center, 99666);
                   let o = amapManager.getMap();
                   if (!self.marker) {
@@ -142,7 +142,8 @@ export default {
 		console.log(status, result)
 	   if (status === "complete" && result.regeocode) {
 		that.address = result.regeocode.formattedAddress;
-        that.$emit('send-address',result.regeocode.formattedAddress)
+        that.$emit('send-address',result.regeocode.formattedAddress);
+        that.$emit('send-lng',that.center);
 		} else {
 		console.log("根据经纬度查询地址失败");
 		}
