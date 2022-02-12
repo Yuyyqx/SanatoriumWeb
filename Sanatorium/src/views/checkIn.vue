@@ -221,9 +221,12 @@
       width="55">
     </el-table-column>
     <el-table-column
-      prop="userRealName"
+      prop="userInfo"
       label="姓名"
       width="120">
+      <template slot-scope="scope" style="width:100%">
+                {{scope.row.userInfo.userRealName}}
+              </template>
     </el-table-column>
     <el-table-column
       prop="monthlySalary"
@@ -265,22 +268,21 @@
               </div>
               <div class="contype">
                 <label style="width: 110px;line-height: 40px;"
-                  ><label style="color: red">*</label>出生年月：</label
-                >
-                <el-input
-                  placeholder="请输入"
-                  v-model="oldDate"
-                  :disabled="true"
-                  style="width:60%;"
-                >
-                </el-input>
-              </div>
-              <div class="contype">
-                <label style="width: 110px;line-height: 40px;"
                   ><label style="color: red">*</label>老人性别：</label
                 >
                 <el-radio v-model="radio" label="1" style="margin-top:12px;">男</el-radio>
-                <el-radio v-model="radio" label="2" style="margin-top:12px;">女</el-radio>
+                <el-radio v-model="radio" label="0" style="margin-top:12px;">女</el-radio>
+              </div>
+              <div class="contype">
+                <label style="width: 110px;line-height: 40px;"
+                  ><label style="color: red">*</label>家庭住址：</label
+                >
+                <el-input
+                  placeholder="请输入"
+                  v-model="oldAddress"
+                  style="width:60%;"
+                >
+                </el-input>
               </div>
               <div class="contype">
                 <label style="width: 110px;line-height: 40px;"
@@ -295,11 +297,11 @@
               </div>
               <div class="contype">
                 <label style="width: 110px;line-height: 40px;"
-                  ><label style="color: red">*</label>家庭住址：</label
+                  >其他联疗人：</label
                 >
                 <el-input
                   placeholder="请输入"
-                  v-model="oldAddress"
+                  v-model="oldOtherPhones"
                   style="width:60%;"
                 >
                 </el-input>
@@ -320,7 +322,7 @@
                 <div>
                   <el-tag
                     :key="tag"
-                    v-for="tag in dynamicTags"
+                    v-for="tag in taboosTags"
                     closable
                     :disable-transitions="false"
                     @close="handleClose(tag)"
@@ -353,28 +355,28 @@
                 <div>
                   <el-tag
                     :key="tag"
-                    v-for="tag in dynamicTags"
+                    v-for="tag in likeTags"
                     closable
                     :disable-transitions="false"
-                    @close="handleClose(tag)"
+                    @close="handleCloseLike(tag)"
                   >
                     {{ tag }}
                   </el-tag>
                   <el-input
                     class="input-new-tag"
-                    v-if="inputVisible"
-                    v-model="inputValue"
-                    ref="saveTagInput"
+                    v-if="inputVisibleLike"
+                    v-model="inputValueLike"
+                    ref="saveTagInputLike"
                     size="small"
-                    @keyup.enter.native="handleInputConfirm"
-                    @blur="handleInputConfirm"
+                    @keyup.enter.native="handleInputConfirmLike"
+                    @blur="handleInputConfirmLike"
                   >
                   </el-input>
                   <el-button
                     v-else
                     class="button-new-tag"
                     size="small"
-                    @click="showInput"
+                    @click="showInputLike"
                     >+ New Tag</el-button
                   >
                 </div>
@@ -386,7 +388,7 @@
                 type="textarea"
                 :rows="6"
                 placeholder="如：体质疏松"
-                v-model="textarea"
+                v-model="physical"
                 style="width: 55%"
               >
               </el-input>
@@ -397,11 +399,44 @@
                 type="textarea"
                 :rows="6"
                 placeholder="请输入"
-                v-model="textarea"
+                v-model="others"
                 style="width: 55%"
               >
               </el-input>
             </div>
+            <!--选择套餐-->
+            <div style="margin-top:15px;">
+              <router-link target="_blank" :to="{path:'/setMealList'}">
+                <el-button v-if="isOrderMeal==1" style="margin-left: -310px;margin-bottom:10px;">套餐详情</el-button>
+              </router-link>
+                <el-table
+                 v-if="isOrderMeal==1"
+    ref="multipleTableMeal"
+    :data="mealData"
+    tooltip-effect="dark"
+    style="width: 85%;margin:0 auto;"
+    @select="handleSelectionChangeMeal"
+    :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+    <el-table-column
+      type="selection"
+      width="55">
+    </el-table-column>
+    <el-table-column
+      prop="mealName"
+      label="套餐名"
+      width="120">
+    </el-table-column>
+    <el-table-column
+      prop="nutritionalScore"
+      label="营养值">
+    </el-table-column>
+    <el-table-column
+      prop="weeklyPrice"
+      label="价格/周"
+      show-overflow-tooltip>
+    </el-table-column>
+  </el-table>
+              </div>
             </el-scrollbar>
           </div>
 
@@ -486,16 +521,18 @@ export default {
       valueRoom: [],
       roomNumber: [],
       roomNumberOptions: [],
-      oldName: "张三",
-      oldCard: "330327200112012508",
-      oldDate: "1980年12月11日",
+      oldName: "",
+      oldCard: "",
       radio: "1",
-      oldFirst: "13376815652",
-      oldAddress: "xxxxxxxxxxxxx",
-      dynamicTags: ["标签一", "标签二", "标签三"],
+      oldFirst: "",
+      oldAddress: "",
+      oldOtherPhones: "",
+      taboosTags: [],
       inputVisible: false,
       inputValue: "",
-      textarea: "",
+      likeTags: [],
+      inputVisibleLike: false,
+      inputValueLike: "",
       sanId: '',
       sanInfoId: '',
       familyAmmount: '',//家属账号
@@ -513,15 +550,21 @@ export default {
       isOrderMeal: 1,//是否订餐
       gradeOld: '',
       nurseData: [
-        {
-          nurseId: "3904867874",
-          userRealName: '王小虎',
-          monthlySalary: '3000'
-        }
+        // {
+        //   nurseId: "3904867874",
+        //   userRealName: '王小虎',
+        //   monthlySalary: '3000'
+        // }
       ],//护工列表
       multipleSelection: [],
       firstConnectId: '',//老人第一联系人家属ID
       chooseNurseId: '',//选择的护工ID
+      oldId: '',//老人ID
+      oldInfoId: '',//老人信息ID
+      mealData: [],//套餐列表
+      setMealId: '',
+      physical: '',//身体注意事项
+      others:"" //其他注意事项
     };
   },
   methods: {
@@ -534,6 +577,7 @@ export default {
     //下一步
     next() {
       if(this.active==2) {
+        //将老人信息写入数据库接口
         this.$ajax
         .post(
           "https://www.tangyihan.top/web/old/registerOld_3_next?baseHealth="+this.healthLevel+"&bedId="+this.bedId+
@@ -542,7 +586,54 @@ export default {
         )
         .then((response) => {
           console.log(response.data);
-          this.roomNumberOptions = response.data.data
+          this.oldId = response.data.data.oldId
+          this.oldInfoId = response.data.data.oldInfoId
+          //根据老人身份获取相关信息接口
+          this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/old/registerOld_4?oldId="+response.data.data.oldId+"&oldInfoId="+response.data.data.oldInfoId+
+          "&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.oldName = response.data.data.oldName
+          this.oldCard = response.data.data.oldCardId
+          this.radio = String(response.data.data.oldInfo.sex)
+          console.log(this.radio)
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+      }
+
+      if(this.active == 3) {
+        //完善老人个人信息接口
+        this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/old/registerOld_4?oldId="+this.oldId+"&oldInfoId="+this.oldInfoId+
+          "&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId+"&address="+this.oldAddress+"&firstPhone="+this.oldFirst+"&otherPhones="+this.oldOtherPhones
+        )
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+      }
+
+      if(this.active == 4) {
+        //完善老人有关注意事项接口
+        this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/old/registerOld_5?oldId="+this.oldId+"&oldInfoId="+this.oldInfoId+
+          "&likeFood="+this.likeFood+"&taboos="+this.taboos+"&physical="+this.physical+"&others="+this.others+"&setMealId="+this.setMealId
+        )
+        .then((response) => {
+          console.log(response.data);
         })
         .catch((res) => {
           console.log(res);
@@ -591,24 +682,61 @@ export default {
           console.log(res);
         });
     },
-    handleClose(tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
-    },
 
+    //忌口
+    handleClose(tag) {
+      this.taboosTags.splice(this.taboosTags.indexOf(tag), 1);
+      console.log(this.taboosTags)
+      this.taboos = this.taboosTags.join("+")
+      console.log("taboos:"+this.taboos)
+    },
     showInput() {
       this.inputVisible = true;
       this.$nextTick((_) => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
+      console.log(this.taboosTags)
+      this.taboos = this.taboosTags.join("+")
+      console.log("taboos:"+this.taboos)
     },
-
     handleInputConfirm() {
       let inputValue = this.inputValue;
       if (inputValue) {
-        this.dynamicTags.push(inputValue);
+        this.taboosTags.push(inputValue);
       }
       this.inputVisible = false;
       this.inputValue = "";
+      console.log(this.taboosTags)
+      this.taboos = this.taboosTags.join("+")
+      console.log("taboos:"+this.taboos)
+    },
+
+    //喜爱的食物
+    handleCloseLike(tag) {
+      this.likeTags.splice(this.likeTags.indexOf(tag), 1);
+      console.log(this.likeTags)
+      this.likeFood = this.likeTags.join("+")
+      console.log("likeFood:"+this.likeFood)
+    },
+    showInputLike() {
+      this.inputVisibleLike = true;
+      this.$nextTick((_) => {
+        this.$refs.saveTagInputLike.$refs.input.focus();
+      });
+      console.log(this.likeTags)
+      this.likeFood = this.likeTags.join("+")
+      console.log("likeFood:"+this.likeFood)
+    },
+    handleInputConfirmLike() {
+      let inputValue = this.inputValueLike;
+      if (inputValue) {
+        this.likeTags.push(this.inputValueLike);
+      }
+      this.inputVisibleLike = false;
+      this.inputValueLike = "";
+      console.log(this.likeTags)
+      this.likeFood = this.likeTags.join("+")
+      console.log("likeFood:"+this.likeFood)
     },
 
     //根据家长账号和验证码获取老人列表接口
@@ -683,8 +811,6 @@ export default {
     changeGradeOldValue() {
       this.healthLevel=this.options1.find(val=>val.value==this.grade).label
       console.log(this.healthLevel)
-      //根据护理等级和房间类型返回房间列表（当不选择房间类型时）
-      if(this.roomTypeId=='不限') {
         this.$ajax
         .post(
           "https://www.tangyihan.top/web/old/registerOld_3_choose?healthLevel="+this.healthLevel+
@@ -697,29 +823,41 @@ export default {
         .catch((res) => {
           console.log(res);
         });
-      }
     },
-    toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          this.$refs.multipleTable.clearSelection();
-        }
-      },
       handleSelectionChange(selection,row) {
         this.multipleSelection = row;
         console.log(selection,row)
         this.chooseNurseId = row.nurseId
-      }
+      },
+    //获取当前疗养院现有的膳食套餐list接口
+    getSanMealList() {
+      this.$ajax
+        .get(
+          "https://www.tangyihan.top/web/meal/getSanMealList?sanId=" +
+            this.sanId +
+            "&sanInfoId=" +
+            this.sanInfoId
+        )
+        .then((response) => {
+          this.mealData = response.data.data;
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },  
+      handleSelectionChangeMeal(selection,row) {
+        this.multipleSelectionMeal = row;
+        console.log(selection,row)
+        this.setMealId = row.setMealId
+      },
   },
   created() {},
   mounted() {
-    this.sanInfoId = sessionStorage.getItem("sanInfoId");
-    this.sanId = sessionStorage.getItem("sanId");
+    this.sanInfoId = localStorage.getItem("sanInfoId");
+    this.sanId = localStorage.getItem("sanId");
 
     this.getRoomTypeMoneyList();
+    this.getSanMealList();
   },
 };
 </script>

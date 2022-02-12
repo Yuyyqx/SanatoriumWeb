@@ -130,7 +130,7 @@
             <el-table-column prop="importWay" label="导入方式" width="140">
             </el-table-column>
             <el-table-column prop="createTime" label="创建时间" width="120">
-              <template slot-scope="scope">{{scope.row.createTime | dateYMDHMSFormat}}</template>
+              <template slot-scope="scope" style="whidth:100%;">{{scope.row.createTime | dateYMDHMSFormat}}</template>
             </el-table-column>
             <el-table-column prop="isTopManager" label="是否为最高管理员" width="160">
               <template slot-scope="scope">{{scope.row.isTopManager | isTopM}}</template>
@@ -792,9 +792,9 @@ export default {
   },
   created() {},
   mounted() {
-    this.nowUserName = sessionStorage.getItem("userName");
-    this.sanInfoId = sessionStorage.getItem("sanInfoId");
-    this.sanId = sessionStorage.getItem("sanId");
+    this.nowUserName = localStorage.getItem("userName");
+    this.sanInfoId = localStorage.getItem("sanInfoId");
+    this.sanId = localStorage.getItem("sanId");
 
     this.getAccountList();
   },

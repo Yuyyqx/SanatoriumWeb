@@ -126,20 +126,20 @@
         <div class="maincontent">
           <el-table class="maintable" :data="tableData"
           :header-cell-style="{background:'#eef1f6',color:'#606266'}" style="width: 95%;">
-            <el-table-column type="index" label="编号" width="80">
+            <el-table-column type="index" label="编号" width="60">
             </el-table-column>
-            <el-table-column prop="userInfo" label="护工姓名"  width="130">
-              <template slot-scope="scope">
+            <el-table-column prop="userInfo" label="护工姓名" width="140">
+              <template slot-scope="scope" style="width:100%">
                 {{scope.row.userInfo.userRealName}}
               </template>
             </el-table-column>
             <el-table-column prop="userPhone" label="手机号" width="160">
             </el-table-column>
-            <el-table-column prop="nurseHealth" label="照顾健康等级" width="150" :show-overflow-tooltip="true">
+            <el-table-column prop="nurseHealth" label="照顾健康等级" width="140" :show-overflow-tooltip="true">
             </el-table-column>
-            <el-table-column prop="monthlySalary" label="基本月薪" width="140">
+            <el-table-column prop="monthlySalary" label="基本月薪" width="130">
             </el-table-column>
-            <el-table-column prop="importWay" label="导入方式" width="140">
+            <el-table-column prop="importWay" label="导入方式" width="130">
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
@@ -827,7 +827,7 @@ export default {
       uploadExcel: 'https://www.tangyihan.top/web/nurse/excelUpload',
       myHeaders:{'Access-Control-Allow-Origin':'*'},
       checkedHealth: [],
-      healthList: ['大体健康','恢复健康','基本自理','丧失自理']
+      healthList: ['大体健康','恢复健康','基本自理','丧失自理'],
     };
   },
   methods: {
@@ -967,9 +967,9 @@ export default {
   },
   created() {},
   mounted() {
-    this.nowUserName = sessionStorage.getItem("userName");
-    this.sanInfoId = sessionStorage.getItem("sanInfoId");
-    this.sanId = sessionStorage.getItem("sanId");
+    this.nowUserName = localStorage.getItem("userName");
+    this.sanInfoId = localStorage.getItem("sanInfoId");
+    this.sanId = localStorage.getItem("sanId");
 
     this.getNurseList();
   },

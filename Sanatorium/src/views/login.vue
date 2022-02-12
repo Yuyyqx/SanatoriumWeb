@@ -84,9 +84,9 @@ export default {
                 password: this.form.password,
               },
             });
-            sessionStorage.setItem("userName", this.form.username);
-            sessionStorage.setItem("sanInfoId", response.data.data.sanInfoId);
-            sessionStorage.setItem("sanId", response.data.data.sanId);
+            localStorage.setItem("userName", this.form.username);
+            localStorage.setItem("sanInfoId", response.data.data.sanInfoId);
+            localStorage.setItem("sanId", response.data.data.sanId);
             // sessionStorage.setItem("userID", response.data.data[0].userid);
           // }
         })

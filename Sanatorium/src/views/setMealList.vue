@@ -49,20 +49,23 @@
           <label style="color: #888888"
             >健康状况 / <label style="color: #63cda5">推荐膳食</label> / <label style="color: #63cda5">套餐设置</label></label
           >
-          <el-button style="margin-left:840px;" type="primary" @click="addMeal">新增套餐</el-button>
+          <el-button style="margin-left:840px;" type="primary" @click="dialogVisible = true">新增套餐</el-button>
         </div>
 
         <!--推荐膳食-->
-        <div class="maincontent">
+        <div>
+        <el-scrollbar class="conscorll1">
+        <div class="maincontent" v-for="(item,index) in getMealList">
             <!--套餐A-->
            <div class="titleTip" style="margin-top:10px;margin-left:33px;">
                   <div class="titleLine"></div>
-                  <div style="padding-left:10px;">套餐A</div>
+                  <div style="padding-left:10px;">{{item.mealName}}</div>
+                  <el-button style="margin-left:40px;height:25px;line-height:0px;" type="primary" @click="deleteMeal(item.setMealId)">删除</el-button>
               </div>
               <div>
                 <el-scrollbar class="conscorll">
 <el-table
-    :data="tableData"
+    :data="item.mealList"
     border
     class="mainTable">
     <el-table-column
@@ -75,8 +78,8 @@
       label="周一"
       width="120">
       <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.mon" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.mon}}</span>
+          <el-input type="text" v-model="scope.row.mon" v-show="!scope.row.iseditor" />
+          <span v-show="scope.row.iseditor">{{scope.row.mon}}</span>
         </template>
     </el-table-column>
     <el-table-column
@@ -84,8 +87,8 @@
       label="周二"
       width="120">
        <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.tue" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.tue}}</span>
+          <el-input type="text" v-model="scope.row.tue" v-show="!scope.row.iseditor" />
+          <span v-show="scope.row.iseditor">{{scope.row.tue}}</span>
         </template>
     </el-table-column>
     </el-table-column>
@@ -94,8 +97,8 @@
       label="周三"
       width="120">
        <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.wed" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.wed}}</span>
+          <el-input type="text" v-model="scope.row.wed" v-show="!scope.row.iseditor" />
+          <span v-show="scope.row.iseditor">{{scope.row.wed}}</span>
         </template>
     </el-table-column>
     </el-table-column>
@@ -104,8 +107,8 @@
       label="周四"
       width="120">
        <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.thur" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.thur}}</span>
+          <el-input type="text" v-model="scope.row.thur" v-show="!scope.row.iseditor" />
+          <span v-show="scope.row.iseditor">{{scope.row.thur}}</span>
         </template>
     </el-table-column>
     </el-table-column>
@@ -114,8 +117,8 @@
       label="周五"
       width="120">
       <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.fri" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.fri}}</span>
+          <el-input type="text" v-model="scope.row.fri" v-show="!scope.row.iseditor" />
+          <span v-show="scope.row.iseditor">{{scope.row.fri}}</span>
         </template>
     </el-table-column>
     <el-table-column
@@ -123,8 +126,8 @@
       label="周六"
       width="120">
       <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.sat" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.sat}}</span>
+          <el-input type="text" v-model="scope.row.sat" v-show="!scope.row.iseditor" />
+          <span v-show="scope.row.iseditor">{{scope.row.sat}}</span>
         </template>
     </el-table-column>
     <el-table-column
@@ -132,8 +135,8 @@
       label="周日"
       width="120">
       <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.sun" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.sun}}</span>
+          <el-input type="text" v-model="scope.row.sun" v-show="!scope.row.iseditor" />
+          <span v-show="scope.row.iseditor">{{scope.row.sun}}</span>
         </template>
     </el-table-column>
      <el-table-column label="操作" width="180">
@@ -145,104 +148,39 @@
   </el-table>
   </el-scrollbar>
   </div>
-
-<!--套餐B-->
-<div class="titleTip" style="margin-top:0px;margin-left:33px;">
-                  <div class="titleLine"></div>
-                  <div style="padding-left:10px;">套餐B</div>
-              </div>
-              <div>
-                <el-scrollbar class="conscorll">
-<el-table
-    :data="tableData1"
-    border
-    class="mainTable">
-    <el-table-column
-      prop="date"
-      label="时间"
-      width="100">
-    </el-table-column>
-    <el-table-column
-      prop="mon"
-      label="周一"
-      width="120">
-      <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.mon" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.mon}}</span>
-        </template>
-    </el-table-column>
-    <el-table-column
-      prop="tue"
-      label="周二"
-      width="120">
-       <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.tue" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.tue}}</span>
-        </template>
-    </el-table-column>
-    </el-table-column>
-    <el-table-column
-      prop="wed"
-      label="周三"
-      width="120">
-       <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.wed" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.wed}}</span>
-        </template>
-    </el-table-column>
-    </el-table-column>
-    <el-table-column
-      prop="thur"
-      label="周四"
-      width="120">
-       <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.thur" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.thur}}</span>
-        </template>
-    </el-table-column>
-    </el-table-column>
-    <el-table-column
-      prop="fri"
-      label="周五"
-      width="120">
-      <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.fri" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.fri}}</span>
-        </template>
-    </el-table-column>
-    <el-table-column
-      prop="sat"
-      label="周六"
-      width="120">
-      <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.sat" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.sat}}</span>
-        </template>
-    </el-table-column>
-    <el-table-column
-      prop="sun"
-      label="周日"
-      width="120">
-      <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.sun" v-show="scope.row.iseditor" />
-          <span v-show="!scope.row.iseditor">{{scope.row.sun}}</span>
-        </template>
-    </el-table-column>
-     <el-table-column label="操作" width="180">
-        <template slot-scope="scope">
-          <el-button @click="edit1(scope.row, scope)">编辑</el-button>
-          <el-button type="primary" @click="save1(scope.row)">保存</el-button>
-        </template>
-      </el-table-column>
-  </el-table>
-  </el-scrollbar>
-  </div>
-
-  
         </div>
+        </el-scrollbar>
+  </div>
         </div>
       </div>
-    </div>
+
+
+    <!--新增套餐-->
+    <el-dialog
+      title="新增套餐"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <span>
+        <div style="display: flex">
+          <label style="width: 110px">套餐名称：</label>
+          <el-input
+            placeholder="请输入"
+            v-model="mealTypeName"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addMeal"
+          >新 增</el-button
+        >
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -253,7 +191,7 @@ export default {
   components: {
     NavMenu: NavMenu,
   },
-  inject: ['reload'],//注入reload方法
+  inject: ["reload"], //注入reload方法
   data() {
     return {
       form: {
@@ -464,7 +402,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理访客信息",
-                    value: '/familyVisitApprove'
+                    value: "/familyVisitApprove",
                   },
                 },
                 {
@@ -473,7 +411,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理注册信息",
-                    value: '/familyRegisterApprove'
+                    value: "/familyRegisterApprove",
                   },
                 },
                 {
@@ -482,7 +420,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理预约信息",
-                    value: '/familyAppointmentApprove'
+                    value: "/familyAppointmentApprove",
                   },
                 },
                 {
@@ -491,7 +429,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理活动申请",
-                    value: '/familyActivityApprove'
+                    value: "/familyActivityApprove",
                   },
                 },
               ],
@@ -511,7 +449,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理请假信息",
-                    value: "/nurseLeaveApprove"
+                    value: "/nurseLeaveApprove",
                   },
                 },
               ],
@@ -583,51 +521,8 @@ export default {
         },
       ],
       type: "",
-      courses: [
-        {
-          name: "早读",
-          day: 3,
-          start: [6, 0],
-          end: [6, 45],
-        },
-      ],
-      tableData: [
-        {
-          date: "早",
-          mon: "面包、牛奶",
-          tue: "鸡蛋、油条、粥",
-          wed: "面包、牛奶",
-          thur: "鸡蛋、油条、粥",
-          fri: "面包、牛奶",
-          sat: "鸡蛋、油条、粥",
-          sun: "面食",
-          iseditor: false,
-        },
-        {
-          date: "中",
-          mon: "番茄炒鸡蛋、青椒炒肉、芙蓉汤、香蕉",
-          tue: "蒜蓉蒸茄子、白斩鸡、南瓜汤、苹果",
-          wed: "素炒南瓜尖、什锦虾仁、冬瓜排骨汤、梨",
-          thur: "韭菜炒蚕豆、牛肉、芙蓉汤、香蕉",
-          fri: "豆豉虎皮青椒、糖醋排骨、白萝卜玉米汤、桃子",
-          sat: "如意香干、空心菜梗炒玉米、紫菜蛋汤、梨",
-          sun: "土豆丝、双椒蒸豆腐、冬瓜排骨汤、梨",
-          iseditor: false,
-        },
-        {
-          date: "晚",
-          mon: "韭菜炒蚕豆、牛肉、芙蓉汤、香蕉",
-          tue: "土豆丝、双椒蒸豆腐、冬瓜排骨汤、梨",
-          wed: "素炒南瓜尖、什锦虾仁、冬瓜排骨汤、梨",
-          thur: "蒜蓉蒸茄子、白斩鸡、南瓜汤、苹果",
-          fri: "豆豉虎皮青椒、糖醋排骨、白萝卜玉米汤、桃子",
-          sat: "番茄炒鸡蛋、青椒炒肉、芙蓉汤、香蕉",
-          sun: "如意香干、空心菜梗炒玉米、紫菜蛋汤、梨",
-          iseditor: false,
-        },
-      ],
       tableData1: [
-         {
+        {
           date: "早",
           mon: "面包、牛奶",
           tue: "鸡蛋、油条、粥",
@@ -661,18 +556,53 @@ export default {
           iseditor: false,
         },
       ],
-      nowUserName: '', //当前登录用户
-      sanId: '',
-      sanInfoId: '',
+      nowUserName: "", //当前登录用户
+      sanId: "",
+      sanInfoId: "",
+      dialogVisible: false,
+      mealTypeName: "",
+      getMealList: [], //获取膳食套餐list
     };
   },
   methods: {
     //套餐A
     edit(row, index) {
-      row.iseditor = true;
+      row.iseditor = false;
     },
     save(row, index) {
-      row.iseditor = false;
+      //更新套餐类型内容接口
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/meal/updateSetMeal?setMealId=" +
+            row.setMealId +
+            "&mealId=" +
+            row.mealId +
+            "&mon=" +
+            row.mon +
+            "&tue=" +
+            row.tue +
+            "&wed=" +
+            row.wed +
+            "&thur=" +
+            row.thur +
+            "&fri=" +
+            row.fri +
+            "&sat=" +
+            row.sat +
+            "&sun=" +
+            row.sun +
+            "&iseditor=true" +
+            "&sanId=" +
+            this.sanId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.reload();
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+      row.iseditor = true;
     },
 
     //套餐B
@@ -682,23 +612,85 @@ export default {
     save1(row, index) {
       row.iseditor = false;
     },
+    handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then((_) => {
+          done();
+        })
+        .catch((_) => {});
+    },
 
-    //新增套餐
+    //新增套餐接口
     addMeal() {
-        this.$router.push({
-        path: "/setMeal",
-        query: {
-          way: 1,
-        },
-      });
-    }
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/meal/insertSetMeal?mealName=" +
+            this.mealTypeName +
+            "&sanId=" +
+            this.sanId +
+            "&sanInfoId=" +
+            this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          sessionStorage.setItem("setMealId", response.data.data.setMealId);
+          localStorage.setItem(
+            "tableDataNew",
+            JSON.stringify(response.data.data.mealList)
+          );
+          this.$router.push({
+            path: "/setMeal",
+            query: {
+              way: 1,
+            },
+          });
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+    //获取当前疗养院现有的膳食套餐list接口
+    getSanMealList() {
+      this.$ajax
+        .get(
+          "https://www.tangyihan.top/web/meal/getSanMealList?sanId=" +
+            this.sanId +
+            "&sanInfoId=" +
+            this.sanInfoId
+        )
+        .then((response) => {
+          this.getMealList = response.data.data;
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
+    deleteMeal(setMealId) {
+      this.$ajax
+        .post(
+          "https://www.tangyihan.top/web/meal/delSetMapper?setId=" +
+            setMealId +
+            "&sanId=" +
+            this.sanId +
+            "&sanInfoId=" +
+            this.sanInfoId
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.reload();
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
   },
-  created() {
-  },
+  created() {},
   mounted() {
-    this.nowUserName = sessionStorage.getItem("userName");
-    this.sanInfoId = sessionStorage.getItem("sanInfoId");
-    this.sanId = sessionStorage.getItem("sanId");
+    this.nowUserName = localStorage.getItem("userName");
+    this.sanInfoId = localStorage.getItem("sanInfoId");
+    this.sanId = localStorage.getItem("sanId");
+
+    this.getSanMealList();
   },
 };
 </script>
@@ -809,7 +801,7 @@ export default {
       margin-top: -10px;
       //   background: white;
       width: 95%;
-      height: 490px;
+      height: 330px;
       .conscorll {
         overflow-x: hidden;
         width: 100%;
@@ -884,5 +876,13 @@ export default {
 .cell-icon {
   cursor: pointer;
   color: #fff;
+}
+
+.conscorll1 {
+  overflow-x: hidden;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 640px;
 }
 </style>

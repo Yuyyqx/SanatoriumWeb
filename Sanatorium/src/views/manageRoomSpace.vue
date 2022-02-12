@@ -673,9 +673,9 @@ export default {
   },
   created() {},
   mounted() {
-    this.nowUserName = sessionStorage.getItem("userName");
-    this.sanInfoId = sessionStorage.getItem("sanInfoId");
-    this.sanId = sessionStorage.getItem("sanId");
+    this.nowUserName = localStorage.getItem("userName");
+    this.sanInfoId = localStorage.getItem("sanInfoId");
+    this.sanId = localStorage.getItem("sanId");
 
     this.getRoomTypeList();
   },

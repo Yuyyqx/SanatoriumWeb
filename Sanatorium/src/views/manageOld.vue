@@ -145,19 +145,22 @@
           > -->
           <el-table class="maintable" :data="tableData"
           :header-cell-style="{background:'#eef1f6',color:'#606266'}">
-            <el-table-column type="index" label="编号" width="60" :index="table_index">
+            <el-table-column type="index" label="编号" width="60">
             </el-table-column>
-            <el-table-column prop="name" label="姓名" width="120">
+            <el-table-column prop="oldName" label="姓名" width="120">
             </el-table-column>
-            <el-table-column prop="sex" label="性别" width="100">
+            <el-table-column prop="oldInfo" label="性别" width="110">
+              <template slot-scope="scope" style="whidth:100%;">{{scope.row.oldInfo.sex | filterSex}}</template>
             </el-table-column>
-            <el-table-column prop="date" label="出生年月" width="160">
+            <el-table-column prop="age" label="年龄" width="110">
+              <template slot-scope="scope" style="whidth:100%;">{{scope.row.oldInfo.age}}</template>
             </el-table-column>
-            <el-table-column prop="type" label="入住类型" width="140">
+            <el-table-column prop="baseHealth" label="入住类型" width="140">
             </el-table-column>
-            <el-table-column prop="room" label="入住房间" width="140">
+            <el-table-column prop="bed" label="入住房间" width="180">
+              <template slot-scope="scope" style="whidth:100%;">{{scope.row.bed.b_f_r_b}}</template>
             </el-table-column>
-            <el-table-column prop="communicate" label="护工联系" width="160">
+            <el-table-column prop="nurse" label="护工联系" width="160">
               <template slot-scope="scope">
                 <div style="display: flex; margin-left: 35px">
                   <img
@@ -169,7 +172,7 @@
                     "
                     src="../../static/images/a12.jpg"
                   />
-                  <div style="margin-top: 2px">{{ scope.row.communicate }}</div>
+                  <div style="margin-top: 2px">{{ scope.row.nurse.userInfo.userRealName }}</div>
                 </div>
               </template>
             </el-table-column>
@@ -555,40 +558,7 @@ export default {
           ],
         },
       ],
-      tableData: [
-        {
-          sex: "男",
-          date: "1980-05-02",
-          name: "王小虎",
-          type: "大体健康",
-          room: "9-110",
-          communicate: "罗美珍",
-        },
-        {
-          sex: "女",
-          date: "1981-07-09",
-          name: "李曼",
-          type: "基本自理",
-          room: "8-001",
-          communicate: "陈向阳",
-        },
-        {
-          sex: "男",
-          date: "1979-11-31",
-          name: "王建国",
-          type: "大体健康",
-          room: "9-110",
-          communicate: "罗美珍",
-        },
-        {
-          sex: "男",
-          date: "1979-11-31",
-          name: "王建国",
-          type: "大体健康",
-          room: "9-110",
-          communicate: "罗美珍",
-        },
-      ],
+      tableData: [],
       type: "",
       total: 0,//分页共有多少条数据
       currentPage: 1, //当前页数
@@ -600,6 +570,13 @@ export default {
       sanInfoId: ''
     };
   },
+  filters: {
+    filterSex: function (value) {
+      if (value == 1) return '男'
+      else
+      return '女'
+    },
+  },
   methods: {
     //当前分页有多少条数据
     handleSizeChange(val) {
@@ -609,10 +586,8 @@ export default {
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
         this.currentPage = val;
-      },
-      //跨页编号连续
-      table_index(index){
-        return (this.currentPage-1) * this.pageSize + index + 1
+        this.getOldList();
+        console.log(this.currentPage)
       },
     //登记入住
     checkIn() {
@@ -645,9 +620,9 @@ export default {
   },
   created() {},
   mounted() {
-    this.nowUserName = sessionStorage.getItem("userName");
-    this.sanInfoId = sessionStorage.getItem("sanInfoId");
-    this.sanId = sessionStorage.getItem("sanId");
+    this.nowUserName = localStorage.getItem("userName");
+    this.sanInfoId = localStorage.getItem("sanInfoId");
+    this.sanId = localStorage.getItem("sanId");
 
     this.getOldList();
   },
