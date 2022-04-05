@@ -74,13 +74,13 @@
               :filter-method="filterTag"
               filter-placement="bottom-end"
             >
-            <template slot-scope="scope">
-              <el-tag
-                :type="scope.row.isOpen === '禁用' ? 'danger' : 'success'"
-                disable-transitions
-                >{{ scope.row.isOpen }}</el-tag
-              >
-            </template>
+              <template slot-scope="scope">
+                <el-tag
+                  :type="scope.row.isOpen === '禁用' ? 'danger' : 'success'"
+                  disable-transitions
+                  >{{ scope.row.isOpen }}</el-tag
+                >
+              </template>
             </el-table-column>
             <el-table-column prop="test" label="测试" width="200">
               <template slot-scope="scope">
@@ -105,66 +105,71 @@
             </el-table-column>
           </el-table>
           <el-button
-              style="
-                width: 13%;
-                background: #63cda5;
-                border: 1px solid #63cda5;
-                margin-left: 30px;
-                height: 35px;
-                margin-left: 60px;
-                margin-bottom: 20px;
-              "
-              type="primary"
-              size="mini"
-              >新增通知管理员/方式</el-button
-            >
+            style="
+              width: 13%;
+              background: #63cda5;
+              border: 1px solid #63cda5;
+              margin-left: 30px;
+              height: 35px;
+              margin-left: 60px;
+              margin-bottom: 20px;
+            "
+            type="primary"
+            size="mini"
+            >新增通知管理员/方式</el-button
+          >
         </div>
 
         <!--接收通知-->
         <el-scrollbar class="conscorll">
-        <div class="maincontent1">
-          <el-table class="maintable" border :data="receiveData" :span-method="objectSpanMethod">
-            <el-table-column prop="name" label="通知名称" width="170">
-            </el-table-column>
-            <el-table-column prop="describe" label="描述" width="500">
-            </el-table-column>
-            <el-table-column prop="way" label="通知方式" width="130">
-            </el-table-column>
-            <el-table-column
-              prop="isOpen"
-              label="是否禁用"
-              width="130"
-              :filters="[
-                { text: '禁用', value: '禁用' },
-                { text: '启用', value: '启用' },
-              ]"
-              :filter-method="filterTag"
-              filter-placement="bottom-end"
+          <div class="maincontent1">
+            <el-table
+              class="maintable"
+              border
+              :data="receiveData"
+              :span-method="objectSpanMethod"
             >
-            <template slot-scope="scope">
-              <el-tag
-                :type="scope.row.isOpen === '禁用' ? 'danger' : 'success'"
-                disable-transitions
-                >{{ scope.row.isOpen }}</el-tag
+              <el-table-column prop="name" label="通知名称" width="170">
+              </el-table-column>
+              <el-table-column prop="describe" label="描述" width="500">
+              </el-table-column>
+              <el-table-column prop="way" label="通知方式" width="130">
+              </el-table-column>
+              <el-table-column
+                prop="isOpen"
+                label="是否禁用"
+                width="130"
+                :filters="[
+                  { text: '禁用', value: '禁用' },
+                  { text: '启用', value: '启用' },
+                ]"
+                :filter-method="filterTag"
+                filter-placement="bottom-end"
               >
-            </template>
-            </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  @click="handleEdit(scope.$index, scope.row)"
-                  >停用</el-button
-                >
-                <el-button
-                  size="mini"
-                  @click="handleEdit(scope.$index, scope.row)"
-                  >删除</el-button
-                >
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
+                <template slot-scope="scope">
+                  <el-tag
+                    :type="scope.row.isOpen === '禁用' ? 'danger' : 'success'"
+                    disable-transitions
+                    >{{ scope.row.isOpen }}</el-tag
+                  >
+                </template>
+              </el-table-column>
+              <el-table-column label="操作">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    @click="handleEdit(scope.$index, scope.row)"
+                    >停用</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    @click="handleEdit(scope.$index, scope.row)"
+                    >删除</el-button
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
         </el-scrollbar>
       </div>
     </div>
@@ -513,38 +518,43 @@ export default {
           test: "发送测试",
         },
       ],
-      receiveData:[{
-          name:'老人摔倒警报',
-          describe: '有老人摔倒，附近无护工，请尽快联系护工前来处理',
-          way: '邮件',
-          isOpen: '启用'
-      },{
-          name:'老人摔倒警报',
-          describe: '有老人摔倒，附近无护工，请尽快联系护工前来处理',
-          way: '短信',
-          isOpen: '启用'
-      },{
-          name:'老人摔倒警报',
-          describe: '有老人摔倒，附近无护工，请尽快联系护工前来处理',
-          way: '微信',
-          isOpen: '启用'
-      },{
-          name:'老人生命体征微弱',
-          describe: '老人生命体征微弱',
-          way: '邮件',
-          isOpen: '启用'
-      },{
-          name:'老人生命体征微弱',
-          describe: '老人生命体征微弱',
-          way: '短信',
-          isOpen: '启用'
-      },
-      // {
-      //     name:'老人生命体征微弱',
-      //     describe: '老人生命体征微弱',
-      //     way: '微信',
-      //     isOpen: '启用'
-      // }
+      receiveData: [
+        {
+          name: "老人摔倒警报",
+          describe: "有老人摔倒，附近无护工，请尽快联系护工前来处理",
+          way: "邮件",
+          isOpen: "启用",
+        },
+        {
+          name: "老人摔倒警报",
+          describe: "有老人摔倒，附近无护工，请尽快联系护工前来处理",
+          way: "短信",
+          isOpen: "启用",
+        },
+        {
+          name: "老人摔倒警报",
+          describe: "有老人摔倒，附近无护工，请尽快联系护工前来处理",
+          way: "微信",
+          isOpen: "启用",
+        },
+        {
+          name: "老人生命体征微弱",
+          describe: "老人生命体征微弱",
+          way: "邮件",
+          isOpen: "启用",
+        },
+        {
+          name: "老人生命体征微弱",
+          describe: "老人生命体征微弱",
+          way: "短信",
+          isOpen: "启用",
+        },
+        // {
+        //     name:'老人生命体征微弱',
+        //     describe: '老人生命体征微弱',
+        //     way: '微信',
+        //     isOpen: '启用'
+        // }
       ],
       type: "",
     };
@@ -561,20 +571,20 @@ export default {
       return row.tag === value;
     },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-        if (columnIndex === 0 ||columnIndex === 1) {
-          if (rowIndex % 3 === 0) {
-            return {
-              rowspan: 3,
-              colspan: 1
-            };
-          } else {
-            return {
-              rowspan: 0,
-              colspan: 0
-            };
-          }
+      if (columnIndex === 0 || columnIndex === 1) {
+        if (rowIndex % 3 === 0) {
+          return {
+            rowspan: 3,
+            colspan: 1,
+          };
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0,
+          };
         }
       }
+    },
   },
   created() {},
   mounted() {},
@@ -708,7 +718,7 @@ export default {
       flex-direction: column;
       background: white;
       width: 100%;
-    //   height: 400px;
+      //   height: 400px;
       .maintop {
         display: flex;
         flex-direction: row;

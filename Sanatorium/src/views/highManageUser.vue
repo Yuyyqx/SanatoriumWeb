@@ -47,7 +47,7 @@
         <div class="nowPage">
           <img src="../../static/images/nowPage.png" />
           <label style="color: #888888"
-            >基础信息管理 / 
+            >基础信息管理 /
             <label style="color: #63cda5">管理用户</label></label
           >
         </div>
@@ -62,7 +62,11 @@
                 v-model="search"
                 type="text"
               >
-                <el-select v-model="select" slot="prepend" placeholder="用户角色">
+                <el-select
+                  v-model="select"
+                  slot="prepend"
+                  placeholder="用户角色"
+                >
                   <el-option label="全部" value="0"></el-option>
                   <el-option label="大体健康" value="1"></el-option>
                   <el-option label="恢复健康" value="2"></el-option>
@@ -388,7 +392,7 @@ export default {
                 alias: "盈利分析",
                 value: "/highProfit",
               },
-            }
+            },
           ],
         },
         {
@@ -434,43 +438,43 @@ export default {
       tableData: [
         {
           name: "罗美珍",
-          sex: '女',
+          sex: "女",
           account: "2211315784",
-          role: '护工',
-          sun: '仁和康复敬老院',
-          createTime: '2020-12-17'
+          role: "护工",
+          sun: "仁和康复敬老院",
+          createTime: "2020-12-17",
         },
         {
           name: "陈向阳",
-          sex: '女',
+          sex: "女",
           account: "2211315785",
-          role: '护工',
-          sun: '新生活敬老院',
-          createTime: '2020-12-17'
+          role: "护工",
+          sun: "新生活敬老院",
+          createTime: "2020-12-17",
         },
         {
           name: "李曼",
-          sex: '女',
+          sex: "女",
           account: "19858103789",
-          role: '家属',
-          sun: '',
-          createTime: '2020-12-20'
+          role: "家属",
+          sun: "",
+          createTime: "2020-12-20",
         },
         {
           name: "王建国",
-          sex: '男',
+          sex: "男",
           account: "17858002157",
-          role: '家属',
-          sun: '',
-          createTime: '2020-12-20'
+          role: "家属",
+          sun: "",
+          createTime: "2020-12-20",
         },
         {
           name: "钱玉",
-          sex: '女',
+          sex: "女",
           account: "17858042187",
-          role: '家属',
-          sun: '',
-          createTime: '2020-12-20'
+          role: "家属",
+          sun: "",
+          createTime: "2020-12-20",
         },
       ],
       type: "",

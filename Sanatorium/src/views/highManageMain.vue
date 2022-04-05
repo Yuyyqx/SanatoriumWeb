@@ -46,29 +46,28 @@
       <div class="content">
         <div class="contentLeft">
           <div class="calendar">
-              <div class="titleTip">
-                  <div class="titleLine"></div>
-                  <div style="padding-left:10px;">通知信息管理</div>
-              </div>
-              <div style="display:flex;">
-                  <el-calendar v-model="value"></el-calendar>
-            <div class="activityTip">
-              <label>公告信息</label>
-              <div class="activityName" v-for="(item, index) in activityList">
-                {{ item.id }}、{{ item.name }}
+            <div class="titleTip">
+              <div class="titleLine"></div>
+              <div style="padding-left: 10px">通知信息管理</div>
+            </div>
+            <div style="display: flex">
+              <el-calendar v-model="value"></el-calendar>
+              <div class="activityTip">
+                <label>公告信息</label>
+                <div class="activityName" v-for="(item, index) in activityList">
+                  {{ item.id }}、{{ item.name }}
+                </div>
               </div>
             </div>
-              </div>
-            
           </div>
 
           <!--时间控件-->
           <div class="timeModel">
             <div class="titleTip">
-                  <div class="titleLine"></div>
-                  <div style="padding-left:10px;">快捷入口</div>
-              </div>
-            <div style="margin-top:15px;">
+              <div class="titleLine"></div>
+              <div style="padding-left: 10px">快捷入口</div>
+            </div>
+            <div style="margin-top: 15px">
               <button class="manage">管理用户</button>
               <button class="manage">管理疗养院</button>
               <button class="manage">管理订单</button>
@@ -81,14 +80,14 @@
           <div class="nurse">
             <div class="nurseTop">
               <div class="titleTip">
-                  <div class="titleLine"></div>
-                  <div style="padding-left:10px;">盈利分析</div>
+                <div class="titleLine"></div>
+                <div style="padding-left: 10px">盈利分析</div>
               </div>
               <button
                 style="
                   width: 10%;
-                  background: rgb(36,114,200);
-                  border: 1px solid rgb(36,114,200);
+                  background: rgb(36, 114, 200);
+                  border: 1px solid rgb(36, 114, 200);
                   height: 25px;
                   margin-top: 10px;
                   text-align: center;
@@ -114,27 +113,27 @@
             </div>
           </div>
           <div class="news">
-              <div class="nurseTop">
+            <div class="nurseTop">
               <div class="titleTip">
-                  <div class="titleLine"></div>
-                  <div style="padding-left:10px;">摄像头设备信息管理</div>
+                <div class="titleLine"></div>
+                <div style="padding-left: 10px">摄像头设备信息管理</div>
               </div>
+            </div>
+            <div class="pie" style="margin-top: 30px">
+              <div id="pie1">
+                <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+                <div
+                  id="main2"
+                  style="float: left; width: 50%; height: 200px"
+                ></div>
               </div>
-              <div class="pie" style="margin-top: 30px">
-            <div id="pie1">
-                  <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-                  <div
-                    id="main2"
-                    style="float: left; width: 50%; height: 200px"
-                  ></div>
-                </div>
-                <div id="pie2">
-                  <div
-                    id="main3"
-                    style="float: left; width: 50%; height: 200px"
-                  ></div>
-                </div>
+              <div id="pie2">
+                <div
+                  id="main3"
+                  style="float: left; width: 50%; height: 200px"
+                ></div>
               </div>
+            </div>
           </div>
         </div>
       </div>
@@ -307,7 +306,7 @@ export default {
                 alias: "盈利分析",
                 value: "/highProfit",
               },
-            }
+            },
           ],
         },
         {
@@ -326,8 +325,8 @@ export default {
                 name: "highPublicLog",
                 icon: "el-icon-message-solid",
                 alias: "敏感操作日志记录",
-                value: '/highSensitiveOperation'
-              }
+                value: "/highSensitiveOperation",
+              },
             },
           ],
         },
@@ -365,7 +364,7 @@ export default {
       var myChart2 = echarts.init(document.getElementById("main2"));
       var myChart3 = echarts.init(document.getElementById("main3"));
       // 绘制图表1
-        myChart.setOption({
+      myChart.setOption({
         title: {
           text: "近七日收益", //主标题
           textStyle: {
@@ -379,37 +378,36 @@ export default {
           formatter: "{a} <br/>{b} : {c} ({d}%)",
         },
         legend: {
-        data:['近几月收益'],
-        right: "right",
-        padding: [15,10,0,0]
-    },
-    grid: {
-        left: '3%',
-        right: '9%',
-        bottom: '12%',
-        containLabel: true
-    },
-    xAxis: {
-        name: "时间",
-        type: "category",
-        data: ["2021-07","2021-08","2021-09","2021-10","2021-11"],
-    },
-    yAxis: {
-        name: "收入/万",
-        type: "value",
-        min: 0, // 设置y轴刻度的最小值
-        max: 42, // 设置y轴刻度的最大值
-        splitNumber: 6, // 设置y轴刻度间隔个数
-    },
-    series: [
-       
-        {
-            name:'近几月收益',
-            type:'line',
-            stack: '总量',
-            data:[21.5,22.8,17.5,18.9,30.9]
-        }
-    ]
+          data: ["近几月收益"],
+          right: "right",
+          padding: [15, 10, 0, 0],
+        },
+        grid: {
+          left: "3%",
+          right: "9%",
+          bottom: "12%",
+          containLabel: true,
+        },
+        xAxis: {
+          name: "时间",
+          type: "category",
+          data: ["2021-07", "2021-08", "2021-09", "2021-10", "2021-11"],
+        },
+        yAxis: {
+          name: "收入/万",
+          type: "value",
+          min: 0, // 设置y轴刻度的最小值
+          max: 42, // 设置y轴刻度的最大值
+          splitNumber: 6, // 设置y轴刻度间隔个数
+        },
+        series: [
+          {
+            name: "近几月收益",
+            type: "line",
+            stack: "总量",
+            data: [21.5, 22.8, 17.5, 18.9, 30.9],
+          },
+        ],
       });
       //绘制图表2
       myChart2.setOption({
@@ -429,7 +427,7 @@ export default {
         legend: {
           orient: "vertical",
           bottom: "bottom",
-          data: ["在线", "离线"]
+          data: ["在线", "离线"],
         },
         series: [
           {
@@ -448,11 +446,11 @@ export default {
                 shadowColor: "rgba(0, 0, 0, 0.5)",
               },
             },
-            bottom: 30
+            bottom: 30,
           },
         ],
       });
-       //绘制图表3
+      //绘制图表3
       myChart3.setOption({
         title: {
           text: "今日警报", //主标题
@@ -488,7 +486,7 @@ export default {
                 shadowColor: "rgba(0, 0, 0, 0.5)",
               },
             },
-            bottom: 30
+            bottom: 30,
           },
         ],
       });
@@ -675,8 +673,8 @@ export default {
         }
         .manage {
           width: 90px;
-          background: rgb(36,114,200);
-          border: 1px solid rgb(36,114,200);
+          background: rgb(36, 114, 200);
+          border: 1px solid rgb(36, 114, 200);
           height: 35px;
           margin-right: 20px;
           text-align: center;
@@ -717,21 +715,20 @@ export default {
         // border-radius: 10px;
         // box-shadow: 0 0 2px 1px rgba(119, 118, 118, 0.33);
         padding-top: 3px;
-        
       }
     }
   }
 }
 
 .titleTip {
-    display: flex;
-    font-weight: 600;
-    font-size: 17px;
-    padding: 10px 20px;
-    .titleLine {
-        width: 7px;
-        height: 20px;
-        background: rgb(36,114,200);
-    }
+  display: flex;
+  font-weight: 600;
+  font-size: 17px;
+  padding: 10px 20px;
+  .titleLine {
+    width: 7px;
+    height: 20px;
+    background: rgb(36, 114, 200);
+  }
 }
 </style>

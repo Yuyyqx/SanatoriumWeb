@@ -128,7 +128,7 @@
           :header-cell-style="{background:'#eef1f6',color:'#606266'}" style="width: 95%;">
             <el-table-column type="index" label="编号" width="60">
             </el-table-column>
-            <el-table-column prop="userInfo" label="护工姓名" width="140">
+            <el-table-column prop="userInfo" label="护工姓名" width="135">
               <template slot-scope="scope" style="width:100%">
                 {{scope.row.userInfo.userRealName}}
               </template>

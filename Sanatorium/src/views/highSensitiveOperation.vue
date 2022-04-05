@@ -44,80 +44,107 @@
 
       <!--主要内容-->
       <div class="content">
-        <div class="titleTip" style="margin-top:15px;margin-left:12px;">
+        <div class="titleTip" style="margin-top: 15px; margin-left: 12px">
           <div class="titleLine"></div>
-          <div style="padding-left:10px;">敏感操作日志</div>
+          <div style="padding-left: 10px">敏感操作日志</div>
         </div>
 
         <!--筛选-->
         <div class="chooseTabs">
-            <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-    <el-tab-pane label="今天" name="first">
-        <div class="tabcontent">
-            <!--导航栏-->
-        <div class="tabLeft">
-            <el-menu
-      default-active="1"
-      class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose">
-      <el-menu-item index="1">
-        <span slot="title">停用员工<label style="color:rgb(198,199,201)">(2)</label></span>
-      </el-menu-item>
-      <el-menu-item index="2">
-        <span slot="title">修改主号信息<label style="color:rgb(198,199,201)">(2)</label></span>
-      </el-menu-item>
-      <el-menu-item index="3">
-        <span slot="title">消息记录导出<label style="color:rgb(198,199,201)">(0)</label></span>
-      </el-menu-item>
-      <el-menu-item index="4">
-        <span slot="title">管理权限变更<label style="color:rgb(198,199,201)">(0)</label></span>
-      </el-menu-item>
-    </el-menu>
-        </div>
-        <!--表格-->
-        <div class="tabRight">
-            <el-table class="maintable" :data="tableData">
-            <el-table-column prop="staff" label="被停用的员工" width="200">
-              <template slot-scope="scope">
-                <div style="display: flex; margin-left: 35px">
-                  <img
-                    style="
-                      width: 35px;
-                      height: 35px;
-                      margin-left: -5px;
-                      margin-right: 5px;
-                    "
-                    src="../../static/images/a12.jpg"
-                  />
-                  <div style="margin-top: 0px">{{ scope.row.staff }}</div>
+          <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+            <el-tab-pane label="今天" name="first">
+              <div class="tabcontent">
+                <!--导航栏-->
+                <div class="tabLeft">
+                  <el-menu
+                    default-active="1"
+                    class="el-menu-vertical-demo"
+                    @open="handleOpen"
+                    @close="handleClose"
+                  >
+                    <el-menu-item index="1">
+                      <span slot="title"
+                        >停用员工<label style="color: rgb(198, 199, 201)"
+                          >(2)</label
+                        ></span
+                      >
+                    </el-menu-item>
+                    <el-menu-item index="2">
+                      <span slot="title"
+                        >修改主号信息<label style="color: rgb(198, 199, 201)"
+                          >(2)</label
+                        ></span
+                      >
+                    </el-menu-item>
+                    <el-menu-item index="3">
+                      <span slot="title"
+                        >消息记录导出<label style="color: rgb(198, 199, 201)"
+                          >(0)</label
+                        ></span
+                      >
+                    </el-menu-item>
+                    <el-menu-item index="4">
+                      <span slot="title"
+                        >管理权限变更<label style="color: rgb(198, 199, 201)"
+                          >(0)</label
+                        ></span
+                      >
+                    </el-menu-item>
+                  </el-menu>
                 </div>
-              </template>
-            </el-table-column>
-            <el-table-column prop="state" label="状态" width="200">
-            </el-table-column>
-            <el-table-column prop="operate" label="操作者" width="200">
-            </el-table-column>
-            <el-table-column prop="date" label="操作时间">
-            </el-table-column>
-          </el-table>
-          <div class="tabRightBottom">
-              <div>共 4 项，每页显示<label style="color:rgb(75,73,148)"> 5 </label></div>
-                  <el-pagination
-            class="mainpagination"
-            background
-            layout="prev, pager, next"
-            :total="1"
-          >
-          </el-pagination>
-          </div>
-        </div>
-        </div>
-    </el-tab-pane>
-    <el-tab-pane label="昨天" name="second"></el-tab-pane>
-    <el-tab-pane label="最近7天" name="third"></el-tab-pane>
-    <el-tab-pane label="最近30天" name="fourth"></el-tab-pane>
-  </el-tabs>
+                <!--表格-->
+                <div class="tabRight">
+                  <el-table class="maintable" :data="tableData">
+                    <el-table-column
+                      prop="staff"
+                      label="被停用的员工"
+                      width="200"
+                    >
+                      <template slot-scope="scope">
+                        <div style="display: flex; margin-left: 35px">
+                          <img
+                            style="
+                              width: 35px;
+                              height: 35px;
+                              margin-left: -5px;
+                              margin-right: 5px;
+                            "
+                            src="../../static/images/a12.jpg"
+                          />
+                          <div style="margin-top: 0px">
+                            {{ scope.row.staff }}
+                          </div>
+                        </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="state" label="状态" width="200">
+                    </el-table-column>
+                    <el-table-column prop="operate" label="操作者" width="200">
+                    </el-table-column>
+                    <el-table-column prop="date" label="操作时间">
+                    </el-table-column>
+                  </el-table>
+                  <div class="tabRightBottom">
+                    <div>
+                      共 4 项，每页显示<label style="color: rgb(75, 73, 148)">
+                        5
+                      </label>
+                    </div>
+                    <el-pagination
+                      class="mainpagination"
+                      background
+                      layout="prev, pager, next"
+                      :total="1"
+                    >
+                    </el-pagination>
+                  </div>
+                </div>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="昨天" name="second"></el-tab-pane>
+            <el-tab-pane label="最近7天" name="third"></el-tab-pane>
+            <el-tab-pane label="最近30天" name="fourth"></el-tab-pane>
+          </el-tabs>
         </div>
       </div>
     </div>
@@ -283,7 +310,7 @@ export default {
                 alias: "盈利分析",
                 value: "/highProfit",
               },
-            }
+            },
           ],
         },
         {
@@ -302,7 +329,7 @@ export default {
                 name: "highPublicLog",
                 icon: "el-icon-message-solid",
                 alias: "敏感操作日志记录",
-                value: '/highSensitiveOperation'
+                value: "/highSensitiveOperation",
               },
               //三级
               childs: [
@@ -327,32 +354,32 @@ export default {
           ],
         },
       ],
-      activeName: 'first',
+      activeName: "first",
       tableData: [
         {
           staff: "杨立达",
-          state: '已停用',
-          operate: '高级管理员',
-          date: '2021-11-30 15:38'
+          state: "已停用",
+          operate: "高级管理员",
+          date: "2021-11-30 15:38",
         },
         {
           staff: "周瑶",
-          state: '已停用',
-          operate: '高级管理员',
-          date: '2021-11-30 15:38'
+          state: "已停用",
+          operate: "高级管理员",
+          date: "2021-11-30 15:38",
         },
         {
           staff: "张翰文",
-          state: '已停用',
-          operate: '高级管理员',
-          date: '2021-11-30 15:38'
+          state: "已停用",
+          operate: "高级管理员",
+          date: "2021-11-30 15:38",
         },
         {
           staff: "陈梦琪",
-          state: '已停用',
-          operate: '高级管理员',
-          date: '2021-11-30 15:38'
-        }
+          state: "已停用",
+          operate: "高级管理员",
+          date: "2021-11-30 15:38",
+        },
       ],
     };
   },
@@ -361,8 +388,7 @@ export default {
       console.log(tab, event);
     },
     handleClose() {},
-    handleOpen() {}
-    
+    handleOpen() {},
   },
   created() {},
   mounted() {},
@@ -376,7 +402,7 @@ export default {
   // align-content: center;
   width: 100%;
   height: 100%;
-//   background: rgb(236, 241, 247);
+  //   background: rgb(236, 241, 247);
 }
 
 .left {
@@ -450,53 +476,53 @@ export default {
     display: flex;
     flex-direction: column;
     .chooseTabs {
-        margin-top: 30px;
-        background: white;
-        width: 95%;
-        height: 490px;
-        margin: 15px auto;
-        .tabcontent {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            .tabLeft {
-                width: 20%;
-                height: 100%;
-            }
-            .tabRight {
-                width: 76%;
-                height: 100%;
-                display: flex;
-      flex-direction: column;
+      margin-top: 30px;
+      background: white;
+      width: 95%;
+      height: 490px;
       margin: 15px auto;
-      .maintable {
-        width: 95%;
-        margin: 0px auto;
-      }
-      .tabRightBottom {
-          display: flex;
-          margin-top: 15px;
-          margin-left: 50px;
-          .mainpagination {
-        margin-left: 580px;
-        width: 5%;
-      }
-      }
-            }
+      .tabcontent {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        .tabLeft {
+          width: 20%;
+          height: 100%;
         }
+        .tabRight {
+          width: 76%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          margin: 15px auto;
+          .maintable {
+            width: 95%;
+            margin: 0px auto;
+          }
+          .tabRightBottom {
+            display: flex;
+            margin-top: 15px;
+            margin-left: 50px;
+            .mainpagination {
+              margin-left: 580px;
+              width: 5%;
+            }
+          }
+        }
+      }
     }
   }
 }
 
 .titleTip {
-    display: flex;
-    font-weight: 600;
-    font-size: 17px;
-    padding: 10px 20px;
-    .titleLine {
-        width: 7px;
-        height: 20px;
-        background: rgb(36,114,200);
-    }
+  display: flex;
+  font-weight: 600;
+  font-size: 17px;
+  padding: 10px 20px;
+  .titleLine {
+    width: 7px;
+    height: 20px;
+    background: rgb(36, 114, 200);
+  }
 }
 </style>

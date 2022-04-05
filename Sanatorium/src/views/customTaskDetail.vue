@@ -542,7 +542,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理访客信息",
-                    value: '/familyVisitApprove'
+                    value: "/familyVisitApprove",
                   },
                 },
                 {
@@ -551,7 +551,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理注册信息",
-                    value: '/familyRegisterApprove'
+                    value: "/familyRegisterApprove",
                   },
                 },
                 {
@@ -560,7 +560,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理预约信息",
-                    value: '/familyAppointmentApprove'
+                    value: "/familyAppointmentApprove",
                   },
                 },
                 {
@@ -569,7 +569,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理活动申请",
-                    value: '/familyActivityApprove'
+                    value: "/familyActivityApprove",
                   },
                 },
               ],
@@ -589,7 +589,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理请假信息",
-                    value: "/nurseLeaveApprove"
+                    value: "/nurseLeaveApprove",
                   },
                 },
               ],

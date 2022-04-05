@@ -1,4 +1,4 @@
-<template>
+<template></template>
   <div id="nurseLeaveApprove">
     <div class="left">
       <div class="exa">
@@ -116,53 +116,53 @@
       center
       class="detailContent"
     >
-    <span>
-      <div class="detailMain">
+      <span>
+        <div class="detailMain">
           <div class="detailMainTop">
-              <div style="font-weight: 600;padding-left:10px;">{{detailInfo.nurseName}}提交的2021年护工请假审批</div>
-              <div :class="detailInfo.state=='审批中'? 'color1': 'color2'">{{detailInfo.state}}</div>
+            <div style="font-weight: 600; padding-left: 10px">
+              {{ detailInfo.nurseName }}提交的2021年护工请假审批
+            </div>
+            <div :class="detailInfo.state == '审批中' ? 'color1' : 'color2'">
+              {{ detailInfo.state }}
+            </div>
           </div>
           <el-scrollbar class="conscorll1">
-          <div class="otherInfo">
-              
+            <div class="otherInfo">
               <div class="applyId">
-                  <div class="applyIdLabel">申请编号：</div>
-                  <div>{{detailInfo.id}}</div>
+                <div class="applyIdLabel">申请编号：</div>
+                <div>{{ detailInfo.id }}</div>
               </div>
               <div class="applyId">
-                  <div class="applyIdLabel">护工疗号：</div>
-                  <div>{{detailInfo.nurseId}}</div>
+                <div class="applyIdLabel">护工疗号：</div>
+                <div>{{ detailInfo.nurseId }}</div>
               </div>
-              <div class="illustrate">{{illustrate}}</div>
+              <div class="illustrate">{{ illustrate }}</div>
               <div class="applyId">
-                  <div class="applyIdLabel">管理老人：</div>
-                  <div>{{detailInfo.oldName}}</div>
-              </div>
-              <div class="applyId">
-                  <div class="applyIdLabel">请假时间：</div>
-                  <div>{{detailInfo.startTime}}</div>
+                <div class="applyIdLabel">管理老人：</div>
+                <div>{{ detailInfo.oldName }}</div>
               </div>
               <div class="applyId">
-                  <div class="applyIdLabel">返回时间：</div>
-                  <div>{{detailInfo.endTime}}</div>
+                <div class="applyIdLabel">请假时间：</div>
+                <div>{{ detailInfo.startTime }}</div>
               </div>
               <div class="applyId">
-                  <div class="applyIdLabel">请假理由：</div>
-                  <div>{{detailInfo.reason}}</div>
+                <div class="applyIdLabel">返回时间：</div>
+                <div>{{ detailInfo.endTime }}</div>
               </div>
-              
-          </div>
+              <div class="applyId">
+                <div class="applyIdLabel">请假理由：</div>
+                <div>{{ detailInfo.reason }}</div>
+              </div>
+            </div>
           </el-scrollbar>
-      </div>
+        </div>
       </span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="refuseClick">拒 绝</el-button>
-        <el-button type="primary" @click="agreeClick"
-          >同 意</el-button
-        >
+        <el-button type="primary" @click="agreeClick">同 意</el-button>
       </span>
     </el-dialog>
- 
+
     <!--是否填写拒绝理由-->
     <el-dialog
       title="拒绝理由"
@@ -414,7 +414,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理访客信息",
-                    value: '/familyVisitApprove'
+                    value: "/familyVisitApprove",
                   },
                 },
                 {
@@ -423,7 +423,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理注册信息",
-                    value: '/familyRegisterApprove'
+                    value: "/familyRegisterApprove",
                   },
                 },
                 {
@@ -432,7 +432,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理预约信息",
-                    value: '/familyAppointmentApprove'
+                    value: "/familyAppointmentApprove",
                   },
                 },
                 {
@@ -441,7 +441,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理活动申请",
-                    value: '/familyActivityApprove'
+                    value: "/familyActivityApprove",
                   },
                 },
               ],
@@ -461,7 +461,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理请假信息",
-                    value: "/nurseLeaveApprove"
+                    value: "/nurseLeaveApprove",
                   },
                 },
               ],
@@ -671,49 +671,50 @@ export default {
       ],
       detailFlag: false,
       detailInfo: {
-          id: '',
-          nurseId: '',
-          nurseName: "",
-          oldName: "",
-          startTime: "",
-          endTime: "",
-          reason: "",
-          state: ""
+        id: "",
+        nurseId: "",
+        nurseName: "",
+        oldName: "",
+        startTime: "",
+        endTime: "",
+        reason: "",
+        state: "",
       },
-      illustrate: "各位同学：请假外出仍要做好日常的防护工作。【1】确实需要请假外出，务必如实申报，如有弄虚作假，严格按照校纪校规处理。审批通过，出校门时主动出示请假记录。【2】晚8点后不得请假外出（病假等特殊情况除外）。当天请假晚 9 点前必须回到学校（特殊情况请及时向辅导员说明）【3】若发现未按时回校，弄虚作假造成严重后果的，按照疫情期间的管理规定作出相应处理。特别提醒：此轮疫情已波及多个省市，请同学们非必要不离校。",
+      illustrate:
+        "各位同学：请假外出仍要做好日常的防护工作。【1】确实需要请假外出，务必如实申报，如有弄虚作假，严格按照校纪校规处理。审批通过，出校门时主动出示请假记录。【2】晚8点后不得请假外出（病假等特殊情况除外）。当天请假晚 9 点前必须回到学校（特殊情况请及时向辅导员说明）【3】若发现未按时回校，弄虚作假造成严重后果的，按照疫情期间的管理规定作出相应处理。特别提醒：此轮疫情已波及多个省市，请同学们非必要不离校。",
       reasonDialogFlag: false,
-      addReason: ''//拒绝理由
+      addReason: "", //拒绝理由
     };
   },
   methods: {
     //进入详情界面
     approveDetail(index) {
       this.detailFlag = true;
-      this.detailInfo = this.approveList[index]
-      if(this.approveList[index].state == '未审批') {
-          this.detailInfo.state = '审批中'
-      } else if(this.approveList[index].state == '已审批') {
-          this.detailInfo.state = '结束审批'
+      this.detailInfo = this.approveList[index];
+      if (this.approveList[index].state == "未审批") {
+        this.detailInfo.state = "审批中";
+      } else if (this.approveList[index].state == "已审批") {
+        this.detailInfo.state = "结束审批";
       }
     },
     //拒绝申请
     refuseClick() {
-        this.reasonDialogFlag = true
-        this.detailFlag = false
+      this.reasonDialogFlag = true;
+      this.detailFlag = false;
     },
     //同意申请
     agreeClick() {
-        this.$alert('后台发送信息给其余护工', '', {
-          confirmButtonText: '确定',
-          callback: action => {
-            this.$message({
-              type: 'info',
-              message: `action: ${ action }`
-            });
-          }
-        });
-        this.detailFlag = false
-    }
+      this.$alert("后台发送信息给其余护工", "", {
+        confirmButtonText: "确定",
+        callback: (action) => {
+          this.$message({
+            type: "info",
+            message: `action: ${action}`,
+          });
+        },
+      });
+      this.detailFlag = false;
+    },
   },
   created() {
     this.listLength = this.approveList.length;
@@ -918,60 +919,60 @@ export default {
   }
 }
 .el-dialog--center .el-dialog__body {
-    background: rgb(240, 240, 240);
-    padding: 0px;
+  background: rgb(240, 240, 240);
+  padding: 0px;
 }
 .conscorll1 {
-      overflow-x: hidden;
-      width: 100%;
-      height: 470px;
-    }
+  overflow-x: hidden;
+  width: 100%;
+  height: 470px;
+}
 .detailContent {
-      .detailMain {
-          width: 100%;
-          height: 470px;
-          display: flex;
-          flex-direction: column;
-          .detailMainTop {
-              width: 100%;
-              height: 50px;
-              background: white;
-              margin-bottom: 15px;
-              padding-bottom: 5px;
-          }
-          .otherInfo {
-              width: 90%;
-            //   height: 370px;
-              background: white;
-              border-radius: 10px;
-              margin: 0 auto;
-              padding: 15px;
-              margin-bottom: 15px;
-              .applyId {
-                  margin-bottom: 12px;
-                  .applyIdLabel {
-                      margin-bottom: 5px;
-                  }
-              }
-              .illustrate {
-                  font-size: 13px;
-                  color: rgb(140,147,155);
-                  flex-wrap: wrap;
-                  margin-bottom: 12px;
-              }
-          }
+  .detailMain {
+    width: 100%;
+    height: 470px;
+    display: flex;
+    flex-direction: column;
+    .detailMainTop {
+      width: 100%;
+      height: 50px;
+      background: white;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+    }
+    .otherInfo {
+      width: 90%;
+      //   height: 370px;
+      background: white;
+      border-radius: 10px;
+      margin: 0 auto;
+      padding: 15px;
+      margin-bottom: 15px;
+      .applyId {
+        margin-bottom: 12px;
+        .applyIdLabel {
+          margin-bottom: 5px;
+        }
       }
+      .illustrate {
+        font-size: 13px;
+        color: rgb(140, 147, 155);
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+    }
   }
+}
 .color1 {
-    font-size: 13px;
-    color: rgb(101, 209, 173);
-    margin-top: 10px;
-    padding-left:10px;
+  font-size: 13px;
+  color: rgb(101, 209, 173);
+  margin-top: 10px;
+  padding-left: 10px;
 }
 .color2 {
-    font-size: 13px;
-    color: rgb(253, 148, 56);
-    margin-top: 10px;
-    padding-left:10px;
+  font-size: 13px;
+  color: rgb(253, 148, 56);
+  margin-top: 10px;
+  padding-left: 10px;
 }
 </style>

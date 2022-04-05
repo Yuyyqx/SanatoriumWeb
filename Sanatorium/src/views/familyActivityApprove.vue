@@ -21,7 +21,7 @@
       <div class="top">
         <!-- <img id="logo" src="../../static/images/logo.png"/> -->
         <img src="../../static/images/catalogue.png" />
-        <div class="topRight">
+        <div :class="nowUserName != '' ? 'userNameleft' : 'topRight'">
           <img
             style="width: 26px; height: 26px; margin-top: 5px"
             src="../../static/images/a12.jpg"
@@ -32,7 +32,7 @@
               font-size: 10px;
               padding: 11px 5px 5px 5px;
             "
-            >用户名</label
+            >{{ nowUserName }}</label
           >
           <img src="../../static/images/letter.png" />
           <img
@@ -57,13 +57,25 @@
           <div class="chooseTitle" @click="familyVisit">
             <div class="chooseLabel">访客申请</div>
           </div>
-          <div class="chooseTitle" style="margin-left:-400px;" @click="familyRegister">
+          <div
+            class="chooseTitle"
+            style="margin-left: -400px"
+            @click="familyRegister"
+          >
             <div class="chooseLabel">注册申请</div>
           </div>
-          <div class="chooseTitle" style="margin-left:-400px;" @click="familyAppointment">
+          <div
+            class="chooseTitle"
+            style="margin-left: -400px"
+            @click="familyAppointment"
+          >
             <div class="chooseLabel">预约护工</div>
           </div>
-          <div class="chooseTitle" style="margin-left:-400px;" @click="familyActivity">
+          <div
+            class="chooseTitle"
+            style="margin-left: -400px"
+            @click="familyActivity"
+          >
             <div class="chooseLabel">活动申请</div>
             <div class="chooseLine"></div>
           </div>
@@ -125,57 +137,57 @@
       center
       class="detailContent"
     >
-    <span>
-      <div class="detailMain">
+      <span>
+        <div class="detailMain">
           <div class="detailMainTop">
-              <div style="font-weight: 600;padding-left:10px;">{{detailInfo.nurseName}}提交的2021年家属活动申请</div>
-              <div :class="detailInfo.state=='审批中'? 'color1': 'color2'">{{detailInfo.state}}</div>
+            <div style="font-weight: 600; padding-left: 10px">
+              {{ detailInfo.nurseName }}提交的2021年家属活动申请
+            </div>
+            <div :class="detailInfo.state == '审批中' ? 'color1' : 'color2'">
+              {{ detailInfo.state }}
+            </div>
           </div>
           <el-scrollbar class="conscorll1">
-          <div class="otherInfo">
-              
+            <div class="otherInfo">
               <div class="applyId">
-                  <div class="applyIdLabel">申请编号：</div>
-                  <div>{{detailInfo.id}}</div>
+                <div class="applyIdLabel">申请编号：</div>
+                <div>{{ detailInfo.id }}</div>
               </div>
               <div class="applyId">
-                  <div class="applyIdLabel">家属编号：</div>
-                  <div>{{detailInfo.familyId}}</div>
+                <div class="applyIdLabel">家属编号：</div>
+                <div>{{ detailInfo.familyId }}</div>
               </div>
-              <div class="illustrate">{{illustrate}}</div>
+              <div class="illustrate">{{ illustrate }}</div>
               <div class="applyId">
-                  <div class="applyIdLabel">老人姓名：</div>
-                  <div>{{detailInfo.oldName}}</div>
-              </div>
-              <div class="applyId">
-                  <div class="applyIdLabel">活动编号：</div>
-                  <div>{{detailInfo.activityId}}</div>
+                <div class="applyIdLabel">老人姓名：</div>
+                <div>{{ detailInfo.oldName }}</div>
               </div>
               <div class="applyId">
-                  <div class="applyIdLabel">活动名称：</div>
-                  <div>{{detailInfo.activityName}}</div>
+                <div class="applyIdLabel">活动编号：</div>
+                <div>{{ detailInfo.activityId }}</div>
               </div>
               <div class="applyId">
-                  <div class="applyIdLabel">申请时间：</div>
-                  <div>{{detailInfo.startTime}}</div>
+                <div class="applyIdLabel">活动名称：</div>
+                <div>{{ detailInfo.activityName }}</div>
               </div>
               <div class="applyId">
-                  <div class="applyIdLabel">申请理由：</div>
-                  <div>{{detailInfo.reason}}</div>
+                <div class="applyIdLabel">申请时间：</div>
+                <div>{{ detailInfo.startTime }}</div>
               </div>
-              
-          </div>
+              <div class="applyId">
+                <div class="applyIdLabel">申请理由：</div>
+                <div>{{ detailInfo.reason }}</div>
+              </div>
+            </div>
           </el-scrollbar>
-      </div>
+        </div>
       </span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="refuseClick">拒 绝</el-button>
-        <el-button type="primary" @click="agreeClick"
-          >同 意</el-button
-        >
+        <el-button type="primary" @click="agreeClick">同 意</el-button>
       </span>
     </el-dialog>
- 
+
     <!--是否填写拒绝理由-->
     <el-dialog
       title="拒绝理由"
@@ -421,7 +433,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理访客信息",
-                    value: '/familyVisitApprove'
+                    value: "/familyVisitApprove",
                   },
                 },
                 {
@@ -430,7 +442,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理注册信息",
-                    value: '/familyRegisterApprove'
+                    value: "/familyRegisterApprove",
                   },
                 },
                 {
@@ -439,7 +451,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理预约信息",
-                    value: '/familyAppointmentApprove'
+                    value: "/familyAppointmentApprove",
                   },
                 },
                 {
@@ -448,7 +460,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理活动申请",
-                    value: '/familyActivityApprove'
+                    value: "/familyActivityApprove",
                   },
                 },
               ],
@@ -468,7 +480,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理请假信息",
-                    value: "/nurseLeaveApprove"
+                    value: "/nurseLeaveApprove",
                   },
                 },
               ],
@@ -561,8 +573,8 @@ export default {
           familyName: "王小虎",
           oldName: "陈某某",
           startTime: "2021-11-25 13:47",
-          activityId: '00001',
-          activityName: '活动1',
+          activityId: "00001",
+          activityName: "活动1",
           reason: "",
           state: "未审批",
         },
@@ -572,8 +584,8 @@ export default {
           familyName: "王小明",
           oldName: "李某某",
           startTime: "2021-11-25 13:47",
-          activityId: '00001',
-          activityName: '活动1',
+          activityId: "00001",
+          activityName: "活动1",
           reason: "",
           state: "已审批",
         },
@@ -583,8 +595,8 @@ export default {
           familyName: "张小红",
           oldName: "赵某某",
           startTime: "2021-11-25 13:47",
-          activityId: '00001',
-          activityName: '活动1',
+          activityId: "00001",
+          activityName: "活动1",
           reason: "",
           state: "未审批",
         },
@@ -594,8 +606,8 @@ export default {
           familyName: "王小虎",
           oldName: "陈某某",
           startTime: "2021-11-25 13:47",
-          activityId: '00001',
-          activityName: '活动1',
+          activityId: "00001",
+          activityName: "活动1",
           reason: "",
           state: "未审批",
         },
@@ -605,8 +617,8 @@ export default {
           familyName: "王小明",
           oldName: "李某某",
           startTime: "2021-11-25 13:47",
-          activityId: '00001',
-          activityName: '活动1',
+          activityId: "00001",
+          activityName: "活动1",
           reason: "",
           state: "已审批",
         },
@@ -616,8 +628,8 @@ export default {
           familyName: "张小红",
           oldName: "赵某某",
           startTime: "2021-11-25 13:47",
-          activityId: '00001',
-          activityName: '活动1',
+          activityId: "00001",
+          activityName: "活动1",
           reason: "",
           state: "未审批",
         },
@@ -627,8 +639,8 @@ export default {
           familyName: "王小虎",
           oldName: "陈某某",
           startTime: "2021-11-25 13:47",
-          activityId: '00001',
-          activityName: '活动1',
+          activityId: "00001",
+          activityName: "活动1",
           reason: "",
           state: "未审批",
         },
@@ -638,8 +650,8 @@ export default {
           familyName: "王小明",
           oldName: "李某某",
           startTime: "2021-11-25 13:47",
-          activityId: '00001',
-          activityName: '活动1',
+          activityId: "00001",
+          activityName: "活动1",
           reason: "",
           state: "已审批",
         },
@@ -649,8 +661,8 @@ export default {
           familyName: "张小红",
           oldName: "赵某某",
           startTime: "2021-11-25 13:47",
-          activityId: '00001',
-          activityName: '活动1',
+          activityId: "00001",
+          activityName: "活动1",
           reason: "",
           state: "未审批",
         },
@@ -660,70 +672,74 @@ export default {
           familyName: "王小虎",
           oldName: "陈某某",
           startTime: "2021-11-25 13:47",
-          activityId: '00001',
-          activityName: '活动1',
+          activityId: "00001",
+          activityName: "活动1",
           reason: "",
           state: "未审批",
-        }
+        },
       ],
       detailFlag: false,
       detailInfo: {
-          id: '',
-          famliyId: '',
-          famliyName: "",
-          oldName: "",
-          startTime: "",
-          activityId: '',
-          activityName: '',
-          reason: "",
-          state: ""
+        id: "",
+        famliyId: "",
+        famliyName: "",
+        oldName: "",
+        startTime: "",
+        activityId: "",
+        activityName: "",
+        reason: "",
+        state: "",
       },
-      illustrate: "各位同学：请假外出仍要做好日常的防护工作。【1】确实需要请假外出，务必如实申报，如有弄虚作假，严格按照校纪校规处理。审批通过，出校门时主动出示请假记录。【2】晚8点后不得请假外出（病假等特殊情况除外）。当天请假晚 9 点前必须回到学校（特殊情况请及时向辅导员说明）【3】若发现未按时回校，弄虚作假造成严重后果的，按照疫情期间的管理规定作出相应处理。特别提醒：此轮疫情已波及多个省市，请同学们非必要不离校。",
+      illustrate:
+        "各位同学：请假外出仍要做好日常的防护工作。【1】确实需要请假外出，务必如实申报，如有弄虚作假，严格按照校纪校规处理。审批通过，出校门时主动出示请假记录。【2】晚8点后不得请假外出（病假等特殊情况除外）。当天请假晚 9 点前必须回到学校（特殊情况请及时向辅导员说明）【3】若发现未按时回校，弄虚作假造成严重后果的，按照疫情期间的管理规定作出相应处理。特别提醒：此轮疫情已波及多个省市，请同学们非必要不离校。",
       reasonDialogFlag: false,
-      addReason: ''//拒绝理由
+      addReason: "", //拒绝理由
+      nowUserName: "", //当前登录用户
     };
   },
   methods: {
     //进入详情界面
     approveDetail(index) {
       this.detailFlag = true;
-      this.detailInfo = this.approveList[index]
-      if(this.approveList[index].state == '未审批') {
-          this.detailInfo.state = '审批中'
-      } else if(this.approveList[index].state == '已审批') {
-          this.detailInfo.state = '结束审批'
+      this.detailInfo = this.approveList[index];
+      if (this.approveList[index].state == "未审批") {
+        this.detailInfo.state = "审批中";
+      } else if (this.approveList[index].state == "已审批") {
+        this.detailInfo.state = "结束审批";
       }
     },
     //拒绝申请
     refuseClick() {
-        this.reasonDialogFlag = true
-        this.detailFlag = false
+      this.reasonDialogFlag = true;
+      this.detailFlag = false;
     },
     //同意申请
     agreeClick() {
-        this.detailFlag = false
+      this.detailFlag = false;
     },
-     //跳转至处理访客信息界面
+    //跳转至处理访客信息界面
     familyVisit() {
-        this.$router.push({ path: "/familyVisitApprove" });
+      this.$router.push({ path: "/familyVisitApprove" });
     },
     //跳转至处理注册信息界面
     familyRegister() {
-        this.$router.push({ path: "/familyRegisterApprove" });
+      this.$router.push({ path: "/familyRegisterApprove" });
     },
     //跳转至处理预约信息界面
     familyAppointment() {
-        this.$router.push({ path: "/familyAppointmentApprove" });
+      this.$router.push({ path: "/familyAppointmentApprove" });
     },
     //跳转至处理活动申请界面
     familyActivity() {
-        this.$router.push({ path: "/familyActivityApprove" });
+      this.$router.push({ path: "/familyActivityApprove" });
     },
   },
   created() {
     this.listLength = this.approveList.length;
   },
-  mounted() {},
+  mounted() {
+    this.nowUserName = localStorage.getItem("userName");
+  },
 };
 </script>
 
@@ -791,6 +807,17 @@ export default {
     .topRight {
       display: flex;
       margin-left: 1020px;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+    .userNameleft {
+      margin-left: 940px;
+      display: flex;
       img {
         width: 20px;
         height: 20px;
@@ -923,60 +950,60 @@ export default {
   }
 }
 .el-dialog--center .el-dialog__body {
-    background: rgb(240, 240, 240);
-    padding: 0px;
+  background: rgb(240, 240, 240);
+  padding: 0px;
 }
 .conscorll1 {
-      overflow-x: hidden;
-      width: 100%;
-      height: 470px;
-    }
+  overflow-x: hidden;
+  width: 100%;
+  height: 470px;
+}
 .detailContent {
-      .detailMain {
-          width: 100%;
-          height: 470px;
-          display: flex;
-          flex-direction: column;
-          .detailMainTop {
-              width: 100%;
-              height: 50px;
-              background: white;
-              margin-bottom: 15px;
-              padding-bottom: 5px;
-          }
-          .otherInfo {
-              width: 90%;
-            //   height: 370px;
-              background: white;
-              border-radius: 10px;
-              margin: 0 auto;
-              padding: 15px;
-              margin-bottom: 15px;
-              .applyId {
-                  margin-bottom: 12px;
-                  .applyIdLabel {
-                      margin-bottom: 5px;
-                  }
-              }
-              .illustrate {
-                  font-size: 13px;
-                  color: rgb(140,147,155);
-                  flex-wrap: wrap;
-                  margin-bottom: 12px;
-              }
-          }
+  .detailMain {
+    width: 100%;
+    height: 470px;
+    display: flex;
+    flex-direction: column;
+    .detailMainTop {
+      width: 100%;
+      height: 50px;
+      background: white;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+    }
+    .otherInfo {
+      width: 90%;
+      //   height: 370px;
+      background: white;
+      border-radius: 10px;
+      margin: 0 auto;
+      padding: 15px;
+      margin-bottom: 15px;
+      .applyId {
+        margin-bottom: 12px;
+        .applyIdLabel {
+          margin-bottom: 5px;
+        }
       }
+      .illustrate {
+        font-size: 13px;
+        color: rgb(140, 147, 155);
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+    }
   }
+}
 .color1 {
-    font-size: 13px;
-    color: rgb(101, 209, 173);
-    margin-top: 10px;
-    padding-left:10px;
+  font-size: 13px;
+  color: rgb(101, 209, 173);
+  margin-top: 10px;
+  padding-left: 10px;
 }
 .color2 {
-    font-size: 13px;
-    color: rgb(253, 148, 56);
-    margin-top: 10px;
-    padding-left:10px;
+  font-size: 13px;
+  color: rgb(253, 148, 56);
+  margin-top: 10px;
+  padding-left: 10px;
 }
 </style>

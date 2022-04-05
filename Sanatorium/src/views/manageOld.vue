@@ -21,7 +21,7 @@
       <div class="top">
         <!-- <img id="logo" src="../../static/images/logo.png"/> -->
         <img src="../../static/images/catalogue.png" />
-        <div :class="nowUserName!=''?'userNameleft': 'topRight'">
+        <div :class="nowUserName != '' ? 'userNameleft' : 'topRight'">
           <img
             style="width: 26px; height: 26px; margin-top: 5px"
             src="../../static/images/a12.jpg"
@@ -32,7 +32,7 @@
               font-size: 10px;
               padding: 11px 5px 5px 5px;
             "
-            >{{nowUserName}}</label
+            >{{ nowUserName }}</label
           >
           <img src="../../static/images/letter.png" />
           <img
@@ -105,60 +105,31 @@
 
         <!--管理老人-->
         <div class="maincontent">
-          <!-- <div class="maintop">
-            <label style="margin-left: 30px; margin-right: 7px; margin-top: 3px"
-              >类别:</label
-            >
-            <el-select
-              style="margin-right: 30px"
-              size="mini"
-              placeholder="请选择类别"
-              v-model="type"
-            >
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-
-            <label style="margin-right: 7px; margin-top: 3px">关键词:</label>
-            <el-input
-              style="width: 17%; margin-right: 30px"
-              size="mini"
-            ></el-input>
-            <el-button
-              style="width: 5%; background: #63cda5; border: 1px solid #63cda5"
-              type="primary"
-              size="mini"
-              >搜索</el-button
-            >
-          </div> -->
-          <!-- <el-button
-            @click="checkIn"
-            style="
-              width: 7%;
-              background: #63cda5;
-              border: 1px solid #63cda5;
-              margin-left: 30px;
-            "
-            type="primary"
-            size="mini"
-            >登记入住</el-button
-          > -->
-          <el-table class="maintable" :data="tableData"
-          :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+          <el-table
+            class="maintable"
+            :data="tableData"
+            :header-cell-style="{ background: '#eef1f6', color: '#606266' }"
+          >
             <el-table-column type="index" label="编号" width="60">
             </el-table-column>
             <el-table-column prop="oldName" label="姓名" width="120">
             </el-table-column>
             <el-table-column prop="oldInfo" label="性别" width="110">
-              <template slot-scope="scope" style="whidth:100%;">{{scope.row.oldInfo.sex | filterSex}}</template>
+              <template slot-scope="scope" style="whidth: 100%">{{
+                scope.row.oldInfo.sex | filterSex
+              }}</template>
             </el-table-column>
             <el-table-column prop="age" label="年龄" width="110">
-              <template slot-scope="scope" style="whidth:100%;">{{scope.row.oldInfo.age}}</template>
+              <template slot-scope="scope" style="whidth: 100%">{{
+                scope.row.oldInfo.age
+              }}</template>
             </el-table-column>
             <el-table-column prop="baseHealth" label="入住类型" width="140">
             </el-table-column>
             <el-table-column prop="bed" label="入住房间" width="180">
-              <template slot-scope="scope" style="whidth:100%;">{{scope.row.bed.b_f_r_b}}</template>
+              <template slot-scope="scope" style="whidth: 100%">{{
+                scope.row.bed.b_f_r_b
+              }}</template>
             </el-table-column>
             <el-table-column prop="nurse" label="护工联系" width="160">
               <template slot-scope="scope">
@@ -172,7 +143,9 @@
                     "
                     src="../../static/images/a12.jpg"
                   />
-                  <div style="margin-top: 2px">{{ scope.row.nurse.userInfo.userRealName }}</div>
+                  <div style="margin-top: 2px">
+                    {{ scope.row.nurse.userInfo.userRealName }}
+                  </div>
                 </div>
               </template>
             </el-table-column>
@@ -186,7 +159,7 @@
                   >
                   <el-button
                     size="mini"
-                    @click="handleEdit(scope.$index, scope.row)"
+                    @click="handleGetInfo(scope.$index, scope.row)"
                     >个人信息</el-button
                   >
                 </div>
@@ -220,6 +193,82 @@
         </div>
       </div>
     </div>
+
+    <!--个人信息-->
+    <el-dialog
+      title="个人信息"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <span>
+        <div style="display: flex">
+          <label style="width: 110px; line-height: 40px">老人姓名：</label>
+          <el-input
+            placeholder=""
+            disabled
+            v-model="infoName"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px; line-height: 40px">老人性别：</label>
+          <el-input
+            placeholder=""
+            disabled
+            v-model="infoSex"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px; line-height: 40px">身份证号：</label>
+          <el-input
+            placeholder=""
+            disabled
+            v-model="infoCard"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px; line-height: 40px">家庭住址：</label>
+          <el-input
+            placeholder=""
+            disabled
+            v-model="infoAddress"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px; line-height: 40px">第一疗联人：</label>
+          <el-input
+            placeholder=""
+            disabled
+            v-model="infoFirstPhone"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+        <div style="display: flex; margin-top: 20px">
+          <label style="width: 110px; line-height: 40px">其他疗联人：</label>
+          <el-input
+            placeholder=""
+            disabled
+            v-model="infoOtherPhones"
+            style="margin-left: 0px; width: 60%"
+          >
+          </el-input>
+        </div>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -229,7 +278,7 @@ export default {
   components: {
     NavMenu: NavMenu,
   },
-  inject: ['reload'],//注入reload方法
+  inject: ["reload"], //注入reload方法
   data() {
     return {
       form: {
@@ -440,7 +489,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理访客信息",
-                    value: '/familyVisitApprove'
+                    value: "/familyVisitApprove",
                   },
                 },
                 {
@@ -449,7 +498,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理注册信息",
-                    value: '/familyRegisterApprove'
+                    value: "/familyRegisterApprove",
                   },
                 },
                 {
@@ -458,7 +507,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理预约信息",
-                    value: '/familyAppointmentApprove'
+                    value: "/familyAppointmentApprove",
                   },
                 },
                 {
@@ -467,7 +516,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理活动申请",
-                    value: '/familyActivityApprove'
+                    value: "/familyActivityApprove",
                   },
                 },
               ],
@@ -487,7 +536,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理请假信息",
-                    value: "/nurseLeaveApprove"
+                    value: "/nurseLeaveApprove",
                   },
                 },
               ],
@@ -560,35 +609,41 @@ export default {
       ],
       tableData: [],
       type: "",
-      total: 0,//分页共有多少条数据
+      total: 0, //分页共有多少条数据
       currentPage: 1, //当前页数
       pageSize: 3, //一页3条数据
-      search: '',
-      select: '',
-      nowUserName: '', //当前登录用户
-      sanId: '',
-      sanInfoId: ''
+      search: "",
+      select: "",
+      nowUserName: "", //当前登录用户
+      sanId: "",
+      sanInfoId: "",
+      dialogVisible: false, //是否显示个人信息
+      infoName: "",
+      infoSex: "",
+      infoCard: "",
+      infoAddress: "",
+      infoFirstPhone: "",
+      infoOtherPhones: "",
     };
   },
   filters: {
     filterSex: function (value) {
-      if (value == 1) return '男'
-      else
-      return '女'
+      if (value == 1) return "男";
+      else return "女";
     },
   },
   methods: {
     //当前分页有多少条数据
     handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      //当前界面是分页的第几页
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-        this.currentPage = val;
-        this.getOldList();
-        console.log(this.currentPage)
-      },
+      console.log(`每页 ${val} 条`);
+    },
+    //当前界面是分页的第几页
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.currentPage = val;
+      this.getOldList();
+      console.log(this.currentPage);
+    },
     //登记入住
     checkIn() {
       this.$router.push({ path: "/checkIn" });
@@ -606,16 +661,46 @@ export default {
     getOldList() {
       this.$ajax
         .post(
-          "https://www.tangyihan.top/web/old/getOldPage?current="+this.currentPage+"&sanId="+this.sanId+"&sanInfoId="+this.sanInfoId+"&size=3"
+          "https://www.tangyihan.top/web/old/getOldPage?current=" +
+            this.currentPage +
+            "&sanId=" +
+            this.sanId +
+            "&sanInfoId=" +
+            this.sanInfoId +
+            "&size=3"
         )
         .then((response) => {
           console.log(response.data);
-          this.tableData = response.data.data.records
-          this.total = response.data.data.total
+          this.tableData = response.data.data.records;
+          this.total = response.data.data.total;
         })
         .catch((res) => {
           console.log(res);
         });
+    },
+
+    handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then((_) => {
+          done();
+        })
+        .catch((_) => {});
+    },
+    //获取个人信息接口
+    handleGetInfo(index, row) {
+      this.dialogVisible = true;
+      console.log(index, row);
+      this.infoName = row.oldName;
+      if (row.oldInfo.sex == 0) {
+        this.infoSex = "女";
+      } else {
+        this.infoSex = "男";
+      }
+
+      this.infoCard = row.oldCardId;
+      this.infoAddress = row.oldInfo.address;
+      this.infoFirstPhone = row.firstPhone;
+      this.infoOtherPhones = row.otherPhones;
     },
   },
   created() {},
@@ -632,8 +717,6 @@ export default {
 <style lang="less" scoped>
 #manageOld {
   display: flex;
-  // justify-content: center;
-  // align-content: center;
   width: 100%;
   height: 100%;
   background: rgb(236, 241, 247);
@@ -644,10 +727,6 @@ export default {
   height: 750px;
   background: #435063;
   text-align: left;
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: center;
-  // align-content: center;
   .exa {
     margin: 15px;
     margin-left: 20px;
@@ -655,9 +734,6 @@ export default {
     #logo {
       width: 51px;
       height: 45px;
-      // margin: 20px auto;
-      // border-radius: 100%;
-      // background: white;
     }
     .logofont {
       font-size: 22px;
@@ -673,15 +749,10 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  // justify-content: center;
-  // align-content: center;
   .top {
     width: 100%;
     height: 4%;
     display: flex;
-    // flex-direction: row;
-    // justify-content: space-around;
-    // align-content: center;
     background: white;
     img {
       width: 20px;

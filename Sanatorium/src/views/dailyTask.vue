@@ -21,7 +21,7 @@
       <div class="top">
         <!-- <img id="logo" src="../../static/images/logo.png"/> -->
         <img src="../../static/images/catalogue.png" />
-        <div class="topRight">
+        <div :class="nowUserName != '' ? 'userNameleft' : 'topRight'">
           <img
             style="width: 26px; height: 26px; margin-top: 5px"
             src="../../static/images/a12.jpg"
@@ -32,7 +32,7 @@
               font-size: 10px;
               padding: 11px 5px 5px 5px;
             "
-            >用户名</label
+            >{{ nowUserName }}</label
           >
           <img src="../../static/images/letter.png" />
           <img
@@ -673,7 +673,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理访客信息",
-                    value: '/familyVisitApprove'
+                    value: "/familyVisitApprove",
                   },
                 },
                 {
@@ -682,7 +682,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理注册信息",
-                    value: '/familyRegisterApprove'
+                    value: "/familyRegisterApprove",
                   },
                 },
                 {
@@ -691,7 +691,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理预约信息",
-                    value: '/familyAppointmentApprove'
+                    value: "/familyAppointmentApprove",
                   },
                 },
                 {
@@ -700,7 +700,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理活动申请",
-                    value: '/familyActivityApprove'
+                    value: "/familyActivityApprove",
                   },
                 },
               ],
@@ -720,7 +720,7 @@ export default {
                     name: "classifyManage3",
                     icon: "el-icon-message-solid",
                     alias: "处理请假信息",
-                    value: "/nurseLeaveApprove"
+                    value: "/nurseLeaveApprove",
                   },
                 },
               ],
@@ -989,6 +989,7 @@ export default {
       nurseList: [],
       timeout: null,
       dynamicTags: [],
+      nowUserName: "", //当前登录用户
     };
   },
   methods: {
@@ -1163,6 +1164,7 @@ export default {
     this.roomType = this.$route.query.roomType;
   },
   mounted() {
+    this.nowUserName = localStorage.getItem("userName");
     this.initData();
     this.nurseList = this.loadAll();
   },
@@ -1233,6 +1235,17 @@ export default {
     .topRight {
       display: flex;
       margin-left: 1020px;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+    .userNameleft {
+      margin-left: 940px;
+      display: flex;
       img {
         width: 20px;
         height: 20px;

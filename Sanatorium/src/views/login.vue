@@ -1,20 +1,6 @@
 <template>
   <div id="login">
     <img id="imgs" src="../../static/images/login.jpg" />
-    <!-- <el-form class="content" ref="form" :model="form" label-width="80px">
-        <el-form-item>
-            <label style="padding:30px 80px;font-size:24px">用户登录</label>
-        </el-form-item>
-      <el-form-item label="用户名">
-        <el-input v-model="form.username"></el-input>
-      </el-form-item>
-      <el-form-item label="密码">
-        <el-input type="password" v-model="form.password"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">登录</el-button>
-      </el-form-item>
-    </el-form> -->
     <div class="content">
       <div class="left">
         <img id="logo" src="../../static/images/logo.png" />
@@ -75,20 +61,17 @@ export default {
             this.form.password
         )
         .then((response) => {
-          console.log(response.data)
-          // if (response.data.code == 200) {
-            this.$router.push({
-              path: "/main",
-              query: {
-                username: this.form.username,
-                password: this.form.password,
-              },
-            });
-            localStorage.setItem("userName", this.form.username);
-            localStorage.setItem("sanInfoId", response.data.data.sanInfoId);
-            localStorage.setItem("sanId", response.data.data.sanId);
-            // sessionStorage.setItem("userID", response.data.data[0].userid);
-          // }
+          console.log(response.data);
+          this.$router.push({
+            path: "/main",
+            query: {
+              username: this.form.username,
+              password: this.form.password,
+            },
+          });
+          localStorage.setItem("userName", this.form.username);
+          localStorage.setItem("sanInfoId", response.data.data.sanInfoId);
+          localStorage.setItem("sanId", response.data.data.sanId);
         })
         .catch((res) => {
           console.log(res);

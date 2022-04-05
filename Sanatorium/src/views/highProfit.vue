@@ -91,46 +91,43 @@
 
         <!--图表-->
         <div class="graphList">
-            <div class="graphListTop">
-                <div class="graphTopLeft">
-                    <!--用户使用系统流量统计图-->
-                    <div id="pie1">
-                  <div
-                    id="main1"
-                    style="width: 100%; height: 242.5px"
-                  ></div>
-                </div>
-                </div>
-                <div class="graphTopRight">
-                    <!--购买收费服务人数统计图-->
-                    <div id="pie2">
-                  <div
-                    id="main2"
-                    style="float: left; width: 100%; height: 242.5px"
-                  ></div>
-                </div>
-                </div>
+          <div class="graphListTop">
+            <div class="graphTopLeft">
+              <!--用户使用系统流量统计图-->
+              <div id="pie1">
+                <div id="main1" style="width: 100%; height: 242.5px"></div>
+              </div>
             </div>
-            <div class="graphListBottom">
-                <div class="graphBottomLeft">
-                    <!--系统定制升级服务统计图-->
-                    <div id="pie3">
-                  <div
-                    id="main3"
-                    style="float: left; width: 100%; height: 242.5px"
-                  ></div>
-                </div>
-                </div>
-                <div class="graphBottomRight">
-                    <!--用户定制收费服务统计图-->
-                    <div id="pie4">
-                  <div
-                    id="main4"
-                    style="float: left; width: 100%; height: 242.5px"
-                  ></div>
-                </div>
-                </div>
+            <div class="graphTopRight">
+              <!--购买收费服务人数统计图-->
+              <div id="pie2">
+                <div
+                  id="main2"
+                  style="float: left; width: 100%; height: 242.5px"
+                ></div>
+              </div>
             </div>
+          </div>
+          <div class="graphListBottom">
+            <div class="graphBottomLeft">
+              <!--系统定制升级服务统计图-->
+              <div id="pie3">
+                <div
+                  id="main3"
+                  style="float: left; width: 100%; height: 242.5px"
+                ></div>
+              </div>
+            </div>
+            <div class="graphBottomRight">
+              <!--用户定制收费服务统计图-->
+              <div id="pie4">
+                <div
+                  id="main4"
+                  style="float: left; width: 100%; height: 242.5px"
+                ></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -364,7 +361,7 @@ export default {
         },
       ],
       accuracyValue: "",
-      value1: ''
+      value1: "",
     };
   },
   methods: {
@@ -385,7 +382,7 @@ export default {
       myChart.setOption({
         title: {
           text: "用户使用系统流量统计图", //主标题
-          padding: [10,0,0,0],
+          padding: [10, 0, 0, 0],
           textStyle: {
             fontSize: 16,
           },
@@ -399,7 +396,7 @@ export default {
         legend: {
           data: ["用户流量统计"],
           right: "right",
-          padding: [15,10,0,0],
+          padding: [15, 10, 0, 0],
         },
         grid: {
           left: "3%",
@@ -410,7 +407,7 @@ export default {
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: ["2021-07","2021-08","2021-09","2021-10","2021-11"],
+          data: ["2021-07", "2021-08", "2021-09", "2021-10", "2021-11"],
         },
         yAxis: {
           name: "人数/%",
@@ -424,7 +421,7 @@ export default {
             name: "用户流量统计",
             type: "line",
             stack: "总量",
-            data: [ 70, 60, 75, 50, 80],
+            data: [70, 60, 75, 50, 80],
           },
         ],
       });
@@ -432,7 +429,7 @@ export default {
       myChart2.setOption({
         title: {
           text: "购买收费服务人数统计图", //主标题
-          padding: [10,0,0,0],
+          padding: [10, 0, 0, 0],
           textStyle: {
             fontSize: 16,
           },
@@ -464,17 +461,17 @@ export default {
           textStyle: {
             color: "#000",
           },
-        //   x: "right", // 可设定图例在左、右、居中
-        //   y: "top",
+          //   x: "right", // 可设定图例在左、右、居中
+          //   y: "top",
           right: "right",
-          padding: [15,10,0,0],
-          data: ['用户', '系统'], // 菜单数据
+          padding: [15, 10, 0, 0],
+          data: ["用户", "系统"], // 菜单数据
           selectedMode: false, //图例不可点击
         },
         xAxis: {
           name: "时间",
           type: "category",
-          data: ["2021-07","2021-08","2021-09","2021-10","2021-11"],
+          data: ["2021-07", "2021-08", "2021-09", "2021-10", "2021-11"],
         },
         yAxis: {
           name: "人数",
@@ -485,12 +482,13 @@ export default {
         },
         series: [
           {
-            name: '用户',
-            data: [200,450,300,260,470],
+            name: "用户",
+            data: [200, 450, 300, 260, 470],
             type: "bar",
-          },{
-            name: '系统',
-            data: [600,400,350,450,650],
+          },
+          {
+            name: "系统",
+            data: [600, 400, 350, 450, 650],
             type: "bar",
           },
         ],
@@ -499,7 +497,7 @@ export default {
       myChart3.setOption({
         title: {
           text: "系统定制升级服务统计图", //主标题
-          padding: [10,0,0,0],
+          padding: [10, 0, 0, 0],
           textStyle: {
             fontSize: 16,
           },
@@ -539,7 +537,7 @@ export default {
         xAxis: {
           name: "时间",
           type: "category",
-          data: ["2021-07","2021-08","2021-09","2021-10","2021-11"],
+          data: ["2021-07", "2021-08", "2021-09", "2021-10", "2021-11"],
         },
         yAxis: {
           name: "收入/万",
@@ -550,7 +548,7 @@ export default {
         },
         series: [
           {
-            data: [19, 15.6, 14.3,16.1,22.8],
+            data: [19, 15.6, 14.3, 16.1, 22.8],
             type: "bar",
           },
         ],
@@ -559,7 +557,7 @@ export default {
       myChart4.setOption({
         title: {
           text: "用户定制收费服务统计图", //主标题
-          padding: [10,0,0,0],
+          padding: [10, 0, 0, 0],
           textStyle: {
             fontSize: 16,
           },
@@ -599,7 +597,7 @@ export default {
         xAxis: {
           name: "时间",
           type: "category",
-          data: ["2021-07","2021-08","2021-09","2021-10","2021-11"],
+          data: ["2021-07", "2021-08", "2021-09", "2021-10", "2021-11"],
         },
         yAxis: {
           name: "收入/万",
@@ -610,7 +608,7 @@ export default {
         },
         series: [
           {
-            data: [2.5, 7.2, 3.2,2.7,7.9],
+            data: [2.5, 7.2, 3.2, 2.7, 7.9],
             type: "bar",
           },
         ],
@@ -776,37 +774,37 @@ export default {
       display: flex;
       flex-direction: column;
       .graphListTop {
-          width: 100%;
-          height: 48%;
-          display: flex;
-          .graphTopLeft {
-              width: 49%;
-              height: 100%;
-              background: white;
-          }
-          .graphTopRight {
-              margin-left: 30px;
-              width: 49%;
-              height: 100%;
-              background: white;
-          }
+        width: 100%;
+        height: 48%;
+        display: flex;
+        .graphTopLeft {
+          width: 49%;
+          height: 100%;
+          background: white;
+        }
+        .graphTopRight {
+          margin-left: 30px;
+          width: 49%;
+          height: 100%;
+          background: white;
+        }
       }
       .graphListBottom {
-          width: 100%;
-          height: 48%;
-          display: flex;
-          margin-top: 25px;
-          .graphBottomLeft {
-              width: 49%;
-              height: 100%;
-              background: white;
-          }
-          .graphBottomRight {
-              margin-left: 30px;
-              width: 49%;
-              height: 100%;
-              background: white;
-          }
+        width: 100%;
+        height: 48%;
+        display: flex;
+        margin-top: 25px;
+        .graphBottomLeft {
+          width: 49%;
+          height: 100%;
+          background: white;
+        }
+        .graphBottomRight {
+          margin-left: 30px;
+          width: 49%;
+          height: 100%;
+          background: white;
+        }
       }
     }
   }

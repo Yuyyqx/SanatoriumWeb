@@ -59,7 +59,7 @@
           <div class="timeModel">
             <div class="time">快捷入口</div>
             <div>
-              <button class="manage">管理老人</button>
+              <router-link :to="{name:'manageOld'}"><button class="manage">管理老人</button></router-link>
               <button class="manage">管理护工</button>
               <button class="manage">管理房间</button>
               <button class="manage">健康状况</button>
@@ -697,7 +697,7 @@ export default {
       _this.date = new Date(); // 修改数据date
     }, 1000);
 
-    this.nowUserName = sessionStorage.getItem("userName");
+    this.nowUserName = localStorage.getItem("userName");
   },
   beforeDestroy() {
     if (this.timer) {
@@ -857,6 +857,7 @@ export default {
           text-align: center;
           color: white;
           font-size: 14px;
+          cursor:pointer;
         }
       }
     }

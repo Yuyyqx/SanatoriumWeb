@@ -98,7 +98,11 @@
     <el-button class="submit" type="primary" @click="onSubmit"
       >立即注册</el-button
     >
-    <lacation v-if="locationFlag" @send-address="sendAddress" @send-lng="sendLng"></lacation>
+    <lacation
+      v-if="locationFlag"
+      @send-address="sendAddress"
+      @send-lng="sendLng"
+    ></lacation>
   </div>
 </template>
 <script>
@@ -126,7 +130,7 @@ export default {
         email: "",
         number: "",
         sanLongitude: "",
-        sanLatitude:""
+        sanLatitude: "",
       },
 
       formData: new FormData(),
@@ -137,9 +141,9 @@ export default {
       locationFlag: false,
       dialogImageUrl: "",
       dialogVisible: false,
-      uploadImg:"https://jsonplaceholder.typicode.com/posts/",
-      myHeaders:{'Access-Control-Allow-Origin':'*'},
-      businessPicture: ''
+      uploadImg: "https://jsonplaceholder.typicode.com/posts/",
+      myHeaders: { "Access-Control-Allow-Origin": "*" },
+      businessPicture: "",
     };
   },
   methods: {
@@ -162,22 +166,18 @@ export default {
             this.form.sanLatitude +
             "&sanLongitude=" +
             this.form.sanLongitude +
-             "&sanName=" +
-            this.form.person ,
-            JSON.stringify(this.businessPicture),{emulateJSON:true}
+            "&sanName=" +
+            this.form.person,
+          JSON.stringify(this.businessPicture),
+          { emulateJSON: true }
         )
         .then((response) => {
           console.log(response.data);
           if (response.data.code == 0) {
             alert("注册成功！");
             this.$router.push({
-              path: "/login"
-              // query: {
-              //   username: this.form.username,
-              //   password: this.form.password,
-              // },
+              path: "/login",
             });
-            // sessionStorage.setItem("userName", this.form.username);
           }
         })
         .catch((res) => {
@@ -250,18 +250,18 @@ export default {
       this.form.address = data;
     },
     sendLng(center) {
-      console.log(center)
-      this.form.sanLongitude = center[0]
-      this.form.sanLatitude = center[1]
+      console.log(center);
+      this.form.sanLongitude = center[0];
+      this.form.sanLatitude = center[1];
     },
 
     // 上传图片方法
-    uploadImage(param){
-      const formData = new FormData()
-      formData.append('businessPicture', param.file)
-      this.businessPicture = formData
+    uploadImage(param) {
+      const formData = new FormData();
+      formData.append("businessPicture", param.file);
+      this.businessPicture = formData;
       console.log(param.file);
-      console.log(this.businessPicture)
+      console.log(this.businessPicture);
       // this.$ajax
       // .post("https://www.tangyihan.top/web/sanatoriumUser/uploadImg", formData).then(response => {
       //   console.log('上传图片成功')
@@ -273,13 +273,13 @@ export default {
     },
     // 资质照片上传前校验
     beforeAvatarUpload(file) {
-      const isPic = file.type.indexOf('image') >= 0;
+      const isPic = file.type.indexOf("image") >= 0;
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isPic) {
-        this.$message.error('资质照片只能为图片格式!');
+        this.$message.error("资质照片只能为图片格式!");
       }
       if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 2MB!');
+        this.$message.error("上传图片大小不能超过 2MB!");
       }
       return isPic && isLt2M;
     },
@@ -288,29 +288,14 @@ export default {
       console.log(file, fileList);
     },
     handleSuccess(response, file, fileList) {
-      console.log(response)
-      console.log(file)
+      console.log(response);
+      console.log(file);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
-      console.log(this.dialogImageUrl)
-      // let newfile = new FormData();
-      // newfile.append("img",file.raw);
-      // console.log(newfile.get("img"));
-      // let config = {
-      //   headers: {"Content-Type":"application/octet-stream;charset=utf-8"}
-      // };
-      // const instance = $ajax.create({
-      //   withCredentials: true
-      // });
-      // instance.post("https://www.tangyihan.top/web/sanatoriumUser/uploadImg",newfile,config)
-      // .then(response=> {
-      //   alert("000");
-      // })
-      // console.log(file);
+      console.log(this.dialogImageUrl);
     },
-
   },
   created() {},
   mounted() {},
